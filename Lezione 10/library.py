@@ -592,6 +592,7 @@ def loglikelihood (an_array, pdf, para) :
     
 #  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
+# Funzione per il calcolo del massimo della loglikelihood
 def sezioneAureaMax_LL(
     f,              # funzione di likelihood da massimizzare
     pdf,            # probability density function degli eventi
@@ -618,6 +619,33 @@ def sezioneAureaMax_LL(
 
     return (x0 + x1) / 2.   # Ritorna il punto medio dell'intervallo finale
 
+#  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+# Funzione per il calcolo dei punti di intersezione con la loglikelihood
+def intersect_LLR (
+    g,              # funzione di cui trovare lo zero
+    pdf,            # probability density function of the events
+    sample,         # sample of the events
+    xMin,           # minimo dell'intervallo          
+    xMax,           # massimo dell'intervallo 
+    ylevel,         # value of the horizontal intersection    
+    theta_hat,      # maximum of the likelihood    
+    precision = 0.0001): # precisione della funzione        
+    '''
+    Funzione che calcola zeri
+    con il metodo della bisezione
+    '''
+    def gprime (x) :
+        return g (x, pdf, sample, theta_hat) - ylevel
+
+    xAve = xMin 
+    while ((xMax - xMin) > precision) :
+        xAve = 0.5 * (xMax + xMin) 
+        if (gprime (xAve) * gprime (xMin) > 0.) : 
+            xMin = xAve 
+        else : 
+            xMax = xAve 
+    return xAve 
 
 
 # ----------------- STATISTICHE -----------------
