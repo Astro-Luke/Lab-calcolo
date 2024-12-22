@@ -48,6 +48,7 @@ def main():
     plt.legend()
     plt.grid()
     plt.title('Profilo di verosimiglianza e intervallo di confidenza')
+    plt.savefig ("es10_6.png")
     plt.show()
 
 if __name__ == "__main__":
