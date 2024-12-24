@@ -666,7 +666,7 @@ from iminuit.cost import LeastSquares
 
 
 least_squares = LeastSquares (x, y, sigma, funzione_da_fittare)        # La funzione costo che verrà minimizzata
-my_minuit = Minuit (least_squares, par0 = 0, par1 = 0)        # La classe Minuit va ad effettuare la minimizzazione, prende in ingresso la funzione costo ed i parametri iniziali.
+my_minuit = Minuit (least_squares, par0 = 0, par1 = 0, ...)        # La classe Minuit va ad effettuare la minimizzazione, prende in ingresso la funzione costo ed i parametri iniziali.
 
 # è il principale algoritmo di minimizzazione utilizzato da Minuit.
 #Questo metodo cerca di trovare i valori ottimali dei parametri (par0 e par1) che minimizzano la funzione di costo (X^2).
@@ -675,23 +675,23 @@ my_minuit = Minuit (least_squares, par0 = 0, par1 = 0)        # La classe Minuit
 #2- La direzione di discesa (gradiente).
 #3- Itera per trovare i parametri che portano al minimo globale.
 
-#Se la minimizzazione ha successo:
+# Se la minimizzazione ha successo:
 
-my_minuit.values    #conterrà i valori ottimali dei parametri (par0 e par1).
-my_minuit.fval      #sarà il valore minimo della funzione di costo (x^2).
+my_minuit.values    # Conterrà i valori ottimali dei parametri (par0 e par1).
+my_minuit.fval      # Sarà il valore minimo della funzione di costo (x^2).
 
 my_minuit.hesse ()        # hesse calcola la matrice di Hessian della funzione di costo (X^2) nel punto di minimo.
-#La matrice Hessiana rappresenta la curvatura della funzione di costo intorno al minimo.
-#Questo metodo stima le incertezze sui parametri ottimali (delta_par0 e delta_par1), che verranno salvate in my_minuit.errors.
+# La matrice Hessiana rappresenta la curvatura della funzione di costo intorno al minimo.
+# Questo metodo stima le incertezze sui parametri ottimali (delta_par0 e delta_par1), che verranno salvate in my_minuit.errors.
 
 is_valid = my_minuit.valid      # indica se la minimizzazione è stata completata con successo.
 Q_squared = my_minuit.fval      # restituisce il valore della funzione di costo (X^2) nel punto di minimo.
 N_dof = my_minuit.ndof          # calcola i gradi di libertà (degrees of freedom, N_dof) per l'adattamento.
-#La formula per i gradi di libertà è: N_dof = N_dati - N_param
+# La formula per i gradi di libertà è: N_dof = N_dati - N_param
 
 my_minuit.fmin                  # restituisce un oggetto contenente informazioni dettagliate sulla minimizzazione.
 
-#Tra le proprietà più utili di fmin, trovi:
+# Tra le proprietà più utili di fmin, trovi:
 my_minuit.fmin.fval             # Il valore minimo della funzione di costo (X^2).
 my_minuit.fmin.is_valid         # Se la minimizzazione è valida.
 my_minuit.fmin.edm              # Il valore dell'Expected Distance to Minimum, che misura quanto il risultato è vicino al minimo.
@@ -703,6 +703,7 @@ print (my_minuit.covariance)
 # Mentre la matrice di correlazione con:
 print (my_minuit.covariance.correlation ())
 '''
+
 
 # ----------------- STATISTICHE -----------------
 
