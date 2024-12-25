@@ -43,7 +43,6 @@ def main () :
     my_minuit.migrad ()                                 # minimo dei minimi quadrati
     my_minuit.hesse ()                                  
 
-    # print dei fit
     is_valid = my_minuit.valid
     Q_squared = my_minuit.fval
     N_dof = my_minuit.ndof
