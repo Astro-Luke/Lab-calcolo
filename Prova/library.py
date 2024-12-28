@@ -392,13 +392,26 @@ def rand_TAC_norm (f, x_min, x_max, y_max, loc, scale) :
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-#Funzione che genera numeri pseudocasuali partendo dal teorema centrale del limite
+# Funzione che genera numeri pseudocasuali partendo dal teorema centrale del limite
 def rand_TCL (xMin, xMax, N = 1000) :
     y = 0.
     for i in range (N) :
         y = y + rand_range (xMin, xMax)
     y /= N
     return y
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+# Funzione che genera numeri pseudocasuali partendo dal teorema centrale del limite usando media, sigma di una gaussiana
+# ed N numero di eventi pseudocasuali
+def rand_TCL_par_gauss (mean, sigma, N) :           # par_gauss = parametri gaussiani
+    y = 0. ; 
+    xMin = mean - np.sqrt(3 * N) * sigma
+    xMax = mean + np.sqrt(3 * N) * sigma
+    for i in range (N) :
+        y += rand_range (xMin, xMax)
+    y /= N 
+    return y 
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -711,7 +724,7 @@ print (my_minuit.covariance)
 print (my_minuit.covariance.correlation ())
 '''
 
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+# ---- ---- ---- ---- ---- ---- FIT ---- ---- ---- ---- ---- ---- ----
 
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
