@@ -156,7 +156,11 @@ def controllo_arg() :
     print("Numero di elmenti nel file: ", len(sample))
 '''
 
+'''
+np.savetxt ("nome_del_file.txt", vettore)     # qui il file .txt è creato in automatico
 
+vettore = np.loadtxt ("nome_del_file.txt")     #legge il file .txt e salva tutto all'interno di un vettore numpy
+'''
 
 # ----------------- MATPLOTLIB -----------------
 
