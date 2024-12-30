@@ -11,14 +11,17 @@ Which parameters are correlated, and which are anti-correlated with each other?
 import numpy as np
 import matplotlib.pyplot as plt
 from iminuit import Minuit
-from iminuit.cost import LeastSquares, ExtendedBinnedNLL
+from iminuit.cost import ExtendedBinnedNLL
 from scipy.stats import expon, norm
 
 from library import sturges
 
+# ----- Funzioni -----
+
 def mod_total (bin_edges, N_signal, mu, sigma, N_background, tau) :
-    return N_signal * norm.cdf (bin_edges, mu, sigma) + \
-            N_background * expon.cdf (bin_edges, 0, tau)
+    return N_signal * norm.cdf (bin_edges, mu, sigma) + N_background * expon.cdf (bin_edges, 0, tau)
+
+# ----- Main -----
 
 def main () :
     
@@ -30,17 +33,19 @@ def main () :
 
     funzione_costo = ExtendedBinnedNLL (bin_content, bin_edges, mod_total)
 
-    fit = Minuit (funzione_costo, 2000, 10., 1., 2000, 1.)
+    fit = Minuit (funzione_costo, 2000., 10., 1., 2000, 1.)
+
+    fit.limits['N_signal', 'N_background', 'sigma', 'tau'] = (0, None)
 
     fit.migrad()
     print("Fit is valid: ", fit.valid)
 
     fig, ax = plt.subplots (nrows = 1, ncols = 1)
-    ax.hist (vettore, bins=bin_edges ,color = 'orange')  # Spesso conviene usare bins = 'auto' evitando di scrivere la linea di codice con bin_edges, per farlo però bisogna importare numpy
+    ax.hist (vettore, bins = bin_edges, color = 'orange')   # Spesso conviene usare bins = 'auto' evitando di scrivere la linea di codice con bin_edges, per farlo però bisogna importare numpy
     ax.set_title ('Istogramma', size = 14)
     ax.set_xlabel ('x')
     ax.set_ylabel ('y')
-    ax.grid ()                                          # Se voglio la griglia
+    ax.grid ()                                         
     
     plt.savefig ('Histo.png')
     plt.show ()   

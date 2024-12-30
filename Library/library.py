@@ -838,7 +838,7 @@ def varianza (lista) :
     somma_quadrata = 0
     for elem in lista :
         somma_quadrata = somma_quadrata + (elem - media(lista))**2
-    var = somma_quadrata/(len(lista))
+    return somma_quadrata/(len(lista))
 
 # Deviaz. standard con lista
 def dev_std (lista) :
