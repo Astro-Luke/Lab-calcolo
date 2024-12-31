@@ -803,36 +803,37 @@ def dev_std_media (sample) :
 
 # LE SEGUENTI DUE FUNZIONI SONO COMMENTATE POICHè NON SONO STATE ANCORA CORRETTE O TESTATE QUINDI ATTENZIONE AD INCLUDERLE NEI PROGRAMMI
 '''
-# Funzione per il calcolo della skewness (simmetria o asimmetria)
-def skewness (sample) :
-    mean = media (sample)
-    asymm = 0.
-    for x in sample:
-        asymm = asymm + pow (x - mean,  3)
-    asymm = asymm / (sample.N * pow (sample.sigma (), 3))
-    return asymm
+import numpy as np
+
+# Skewness con array
+def skewness(sample):
+    mean = media(sample)  # Calcola la media con la tua funzione
+    sigma = dev_std(sample)  # Calcola la deviazione standard con la tua funzione
+    n = len(sample)
+    skew = np.sum((sample - mean)**3) / (n * sigma**3)
+    return skew
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-# Funzione per il calcolo della curtosi
-def kurtosis (sample) :
-    mean = sample.mean ()
-    kurt = 0.
-    for x in sample:
-        kurt = kurt + pow (x - mean,  4)
-    kurt = kurt / (sample.N * pow (sample.variance (), 2)) - 3
+# Curtosi con array
+def kurtosis(sample):
+    mean = media(sample)  # Calcola la media con la tua funzione
+    variance = varianza(sample)  # Calcola la varianza con la tua funzione
+    n = len(sample)
+    kurt = np.sum((sample - mean)**4) / (n * variance**2) - 3
     return kurt
 '''
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-# Se invece volessi usare delle semplici liste senza i numpy array posso usare le seguenti funzioni (megglio usare numpy che è più veloce)
+# Se invece volessi usare delle semplici liste senza i numpy array posso usare le seguenti funzioni (meglio usare numpy che è più veloce)
 '''
 # Media con lista
 def media (lista) :
     mean = sum(lista)/len(lista)
     return mean
 
+    
 # Varianza con lista
 def varianza (lista) :
     somma_quadrata = 0
@@ -840,12 +841,38 @@ def varianza (lista) :
         somma_quadrata = somma_quadrata + (elem - media(lista))**2
     return somma_quadrata/(len(lista))
 
+    
 # Deviaz. standard con lista
 def dev_std (lista) :
     sigma = sqrt(varianza(lista))
     return sigma
 
+    
 # Deviaz. standard della media con lista
 def dev_std_media (lista) :
     return dev_std(lista)/sqrt(len(lista))
+
+
+# Skewness con lista
+def skewness(lista):
+    mean = media(lista)  # Calcola la media
+    sigma = dev_std(lista)  # Calcola la deviazione standard
+    n = len(lista)
+    somma_cubi = 0
+    for elem in lista:
+        somma_cubi = somma_cubi + (elem - mean)**3
+    skew = somma_cubi / (n * sigma**3)
+    return skew
+
+
+# Curtosi con lista
+def kurtosis(lista):
+    mean = media(lista)  # Calcola la media
+    variance = varianza(lista)  # Calcola la varianza
+    n = len(lista)
+    somma_quarte = 0
+    for elem in lista:
+        somma_quarte = somma_quarte + (elem - mean)**4
+    kurt = somma_quarte / (n * variance**2) - 3
+    return kurt
 '''
