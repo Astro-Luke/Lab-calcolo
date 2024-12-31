@@ -89,3 +89,11 @@ def kurtosis(lista):
         somma_quarte = somma_quarte + (elem - mean)**4
     kurt = somma_quarte / (n * variance**2) - 3
     return kurt
+
+# Funzione che genera numeri pseudocasuali partendo dal teorema centrale del limite
+def rand_TCL (xMin, xMax, N = 1000) :
+    y = 0.
+    for _ in range (N) :
+        y = y + rand_range (xMin, xMax)
+    y /= N
+    return y

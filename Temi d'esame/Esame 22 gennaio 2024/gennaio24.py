@@ -6,7 +6,7 @@ python3 gennaio24.py
 
 import matplotlib.pyplot as plt
 import numpy as np
-from lib import integral_HOM, funzione_per_normalizzare, rand_TAC, sturges, funzione_globale, media, dev_std, skewness, kurtosis
+from lib import integral_HOM, funzione_per_normalizzare, rand_TAC, sturges, funzione_globale, media, dev_std, skewness, kurtosis, rand_TCL
 
 # ----- Main -----
 
@@ -42,6 +42,12 @@ def main () :
     print ("\nLa asimmetria è: ", skewness(lista_casuali))
     print ("\nLa curtosi è: ", kurtosis(lista_casuali), "\n")
 
+    '''
+    list_TCL = []
+    for _ in range (N) :
+        list_TCL.append (rand_TCL(x_min, x_max))
+    '''
+    
     plt.savefig ('Istogramma gennaio24.png')
     plt.show ()    
 
