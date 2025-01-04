@@ -187,7 +187,7 @@ def sturges (N_eventi) :
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-# Disegno di una distribuzione
+# Disegno di un plot
 '''
     x_axis = np.linspace(x_min, x_max, 100)
     
