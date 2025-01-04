@@ -4,7 +4,7 @@ python3 ottobre24.py
 
 # ----- Librerie -----
 
-from lib import generate_gaus_bm, sturges, media, varianza, dev_std, dev_std_media
+from lib import generate_gaus_bm, sturges, media, varianza_bessel, dev_std, dev_std_media, generate_gaus
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -15,7 +15,7 @@ def main () :
     N = 1000        # Numero di numeri pseudo-casuali da generare
 
     lista_casuali = []                      # inizializzo lista per numeri casuali
-    for _ in range (N) :                    # riempimento lista
+    for _ in range (N//2) :                    # riempimento lista
         g1, g2 = generate_gaus_bm ()
         lista_casuali.append (g1)
         lista_casuali.append (g2)
@@ -35,7 +35,7 @@ def main () :
     
     # punto 3 esame: Statistiche
     print ("Media della distribuzione: ", media (lista_casuali))
-    print ("Varianza della distribuzione: ", varianza (lista_casuali))
+    print ("Varianza della distribuzione: ", varianza_bessel (lista_casuali))
 
     # punto 4 esame: mostrare che dev_standard non cambia e dev_standard della media si
     n = 1
@@ -53,7 +53,7 @@ def main () :
         sigma_mean_list.append (dev_std_media(lista_casuali_stat))
         n = n + 2
         
-    x_axis = np.linspace (0, len(sigma_list), 500)
+    x_axis = np.linspace (2, len(lista_casuali_stat), 500)
 
     # Creazione di una figura con due subplot affiancati
     fig, axes = plt.subplots(1, 2, figsize=(10, 5))  # 1 riga, 2 colonne
@@ -74,6 +74,29 @@ def main () :
     plt.savefig("Confronto media con sigma_media.png")
 
     # punto 5
+
+    mu = 5.
+    sigma = 2.
+    
+    list_gaus_histo = []
+
+    for _ in range (N//2) :                    # riempimento lista
+        g1, g2 = generate_gaus (mu, sigma)
+        list_gaus_histo.append (g1)
+        list_gaus_histo.append (g2)
+
+    # punto 2 esame: Istogramma
+    Nbin = sturges (N)                                                              # per il numero di bin uso la f. di sturges
+    bin_edges = np.linspace (min(list_gaus_histo), max(list_gaus_histo), Nbin)      # uso min e max
+    
+    fig, ax = plt.subplots (nrows = 1, ncols = 1)
+    ax.hist (list_gaus_histo, bins = bin_edges, color = 'orange')
+    ax.set_title ('Istogramma 2', size = 14)
+    ax.set_xlabel ('x')
+    ax.set_ylabel ('Conteggi')
+    ax.grid ()
+    
+    plt.savefig ('Ottobre 2024 gaus.png')
 
     plt.show()
 

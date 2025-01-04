@@ -12,6 +12,15 @@ def generate_gaus_bm () :
     return g1, g2
 
 
+def generate_gaus (mu, sigma) :
+
+    g1, g2 = generate_gaus_bm ()
+    g1 = g1*sigma + mu
+    g2 = g2*sigma + mu
+
+    return g1, g2
+
+
 def sturges (N_eventi) :
     return ceil (1 + np.log2 (N_eventi))
 
@@ -22,15 +31,15 @@ def media (lista) :
     return mean
 
 # Varianza con lista
-def varianza (lista) :
+def varianza_bessel (lista) :
     somma_quadrata = 0
     for elem in lista :
         somma_quadrata = somma_quadrata + (elem - media (lista))**2
-    return somma_quadrata/(len (lista))
+    return somma_quadrata/(len (lista) - 1)
 
 # Deviaz. standard con lista
 def dev_std (lista) :
-    sigma = (sqrt(varianza (lista)))
+    sigma = (sqrt(varianza_bessel (lista)))
     return sigma
 
 # Deviaz. standard della media con lista

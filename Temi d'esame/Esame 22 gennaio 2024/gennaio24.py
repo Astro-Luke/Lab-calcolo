@@ -45,7 +45,7 @@ def main () :
     '''
     list_TCL = []
     for _ in range (N) :
-        list_TCL.append (rand_TCL(x_min, x_max))
+        list_TCL.append (rand_TCL (x_min, x_max))
     '''
     
     plt.savefig ('Istogramma gennaio24.png')

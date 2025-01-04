@@ -802,8 +802,6 @@ def dev_std_media (sample) :
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 # LE SEGUENTI DUE FUNZIONI SONO COMMENTATE POICHè NON SONO STATE ANCORA CORRETTE O TESTATE QUINDI ATTENZIONE AD INCLUDERLE NEI PROGRAMMI
-'''
-import numpy as np
 
 # Skewness con array
 def skewness(sample):
@@ -822,7 +820,7 @@ def kurtosis(sample):
     n = len(sample)
     kurt = np.sum((sample - mean)**4) / (n * variance**2) - 3
     return kurt
-'''
+
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
