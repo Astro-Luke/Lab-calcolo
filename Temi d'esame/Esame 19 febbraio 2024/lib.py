@@ -1,12 +1,20 @@
 import numpy as np
 from iminuit import Minuit
 from iminuit.cost import LeastSquares
+import random
 import sys
 
 # Funzione Hubble
 def legge_hubble (redshift, H) :
     c = 3 * (10)**5
     D = (redshift * c) / (H)
+    return D
+
+
+def accelerazione_uni (redshift, H, omega) :
+    c = 3 * (10)**5
+    q = ((3 * omega) / 2 ) - 1
+    D = (c/H) * (redshift + 0.5 * (1 - q) * (redshift)**2)
     return D
 
 
@@ -38,3 +46,8 @@ def esegui_fit (x, y, sigma, dizionario_par, funzione_fit) :
     }
 
     return diz_risultati
+
+
+# Distribuzione uniforme tra x_min e x_max con seed scelto in auto
+def rand_range (x_min, x_max) :
+    return x_min + random.random() * (x_max - x_min)
