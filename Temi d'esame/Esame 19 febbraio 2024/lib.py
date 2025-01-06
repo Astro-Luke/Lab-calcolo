@@ -51,3 +51,24 @@ def esegui_fit (x, y, sigma, dizionario_par, funzione_fit) :
 # Distribuzione uniforme tra x_min e x_max con seed scelto in auto
 def rand_range (x_min, x_max) :
     return x_min + random.random() * (x_max - x_min)
+
+
+def leggi_file_dati (nome_file):
+    '''
+    Legge un file di dati con valori separati da spazi e lo converte in un array NumPy.
+    Argomenti: nome del file (ad esempio mettendo nome_file = "SuperNovae.txt") assicurandosi che sia nella stessa directory
+    Return: tuple, un array NumPy con i dati e il numero di righe del file.
+    '''
+    with open(nome_file, 'r') as file:
+        lines = file.readlines()
+        lista_dati = []
+        
+        for line in lines:
+            lista_string = line.split()
+            list_float = [float(x) for x in lista_string]
+            lista_dati.append(list_float)
+        
+        sample = np.array(lista_dati)
+        N_righe = len(sample)
+    
+    return sample, N_righe
