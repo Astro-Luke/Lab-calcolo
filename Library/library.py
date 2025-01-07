@@ -167,7 +167,7 @@ vettore = np.loadtxt ("nome_del_file.txt")     #legge il file .txt e salva tutto
 
 # Funzione sturges per il binnaggio (funziona discretamente bene, ma conviene sempre veerificare)
 def sturges (N_eventi) :
-    return ceil (1 + np.log2 (N_eventi))
+    return ceil (1 + np.log2 (N_eventi))       # ceil appartiene alla libreria math, si può usare anche np.ceil (appartiene a numpy)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
