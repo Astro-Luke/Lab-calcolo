@@ -15,7 +15,7 @@ def rand_range (x_min, x_max) :
 def rand_exp_inversa (t) :
     return -1. * np.log (1 - random.random()) * t
 
-def rand_TAC_exp () :
+def rand_TAC_exp (lamb, N) :
     
 
 def rand_TCL_par_gauss (mean, sigma, N) :           # par_gauss = parametri gaussiani
