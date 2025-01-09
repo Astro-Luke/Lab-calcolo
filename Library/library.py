@@ -1,6 +1,6 @@
 # Librerie necessarie affinchè la library.py funzioni (non tutte sono state usate)
 import sys
-from math import sqrt, ceil, pow
+from math import sqrt, ceil, factorial, pow
 import numpy as np
 import time
 import random
@@ -406,6 +406,117 @@ def soluz_eq_secondo_grado (a, b, c) :
         #elif delta < 0 :                                                # Dovrei introdurre i complessi (che sbatti)
         else :
             return print ("Non eiste soluzione per ogni x appartenente ai numeri reali.")
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+# Calcolo del coefficiente binomiale
+def binomial_coefficient (n, k) :
+    """
+    Calcola il coefficiente binomiale (n choose k).
+    
+    Args:
+        n (int): Numero totale di elementi.
+        k (int): Numero di elementi scelti.
+    
+    Returns:
+        int: Coefficiente binomiale.
+    """
+    if k < 0 or k > n:
+        return 0  # Il coefficiente è definito solo per 0 <= k <= n
+    return factorial(n) // (factorial(k) * factorial(n - k))
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione per la distribuzione binomiale
+def binomial_distribution (n, k, p) :
+    """
+    Calcola la probabilità della distribuzione binomiale.
+    
+    Args:
+        n (int): Numero totale di prove.
+        k (int): Numero di successi desiderati.
+        p (float): Probabilità di successo in una singola prova.
+    
+    Returns:
+        float: Probabilità associata.
+    """
+    coeff_binomiale = np.math.comb(n, k)
+    return coeff_binomiale * (p ** k) * ((1 - p) ** (n - k))
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+# Funzione Bernulli Trials
+def bernoulli_trial (p) :
+    """
+    Esegue una singola prova di Bernoulli.
+    Args:
+        p (float): Probabilità di successo.
+    Returns:
+        int: 1 per successo, 0 per fallimento.
+    """
+    if np.random.random() < p :
+        return 1
+    else :
+        return 0
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione distribuzione Poisson
+def poisson_distribution (lmbda, k) :
+    """
+    Calcola la probabilità della distribuzione di Poisson.
+    Args:
+        lmbda (float): Tasso medio di successo (lambda).
+        k (int): Numero di eventi osservati.
+    Returns:
+        float: Probabilità associata.
+    """
+    return (np.exp(-lmbda) * (lmbda ** k)) / np.math.factorial(k)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione distribuzione di Cauchy
+def cauchy_distribution (x, x0, gamma) :
+    """
+    Calcola la funzione di densità di probabilità della distribuzione di Cauchy.
+    Args:
+        x (float): Variabile indipendente.
+        x0 (float): Posizione del picco della distribuzione (mediana).
+        gamma (float): Larghezza a metà altezza (HWHM).
+    Returns:
+        float: Valore della densità di probabilità.
+    """
+    return (1 / np.pi) * (gamma / ((x - x0)**2 + gamma**2))
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione distribuzione di Maxwell Boltzmann
+def maxwell_boltzmann_distribution (v, a) :
+    """
+    Calcola la funzione di densità di probabilità della distribuzione di Maxwell-Boltzmann.
+    Args:
+        v (float): Velocità delle particelle.
+        a (float): Parametro della distribuzione legato alla temperatura e alla massa.
+    Returns:
+        float: Valore della densità di probabilità.
+    """
+    return np.sqrt(2 / np.pi) * (v**2) * np.exp(-v**2 / (2 * a**2)) / (a**3)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione distribuzione Breit Wigner
+def breit_wigner_distribution (x, x0, gamma) :
+    """
+    Calcola la funzione di densità di probabilità della distribuzione di Breit-Wigner.
+    Args:
+        x (float): Variabile indipendente.
+        x0 (float): Posizione del picco (massa del risonante, per esempio).
+        gamma (float): Larghezza a metà altezza (HWHM).
+    Returns:
+        float: Valore della densità di probabilità.
+    """
+    return (1 / np.pi) * (gamma / 2) / ((x - x0)**2 + (gamma / 2)**2)
+
 
 '''
 # ----------------- NUMERI PSEUDOCASUALI -----------------
@@ -962,9 +1073,9 @@ def dev_std_media (sample) :
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 # Skewness con array
-def skewness(sample):
-    mean = media(sample)  # Calcola la media con la tua funzione
-    sigma = dev_std(sample)  # Calcola la deviazione standard con la tua funzione
+def skewness (sample) :
+    mean = media (sample)  # Calcola la media con la tua funzione
+    sigma = dev_std (sample)  # Calcola la deviazione standard con la tua funzione
     n = len(sample)
     skew = np.sum((sample - mean)**3) / (n * sigma**3)
     return skew
@@ -972,9 +1083,9 @@ def skewness(sample):
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 # Curtosi con array
-def kurtosis(sample):
-    mean = media(sample)  # Calcola la media con la tua funzione
-    variance = varianza(sample)  # Calcola la varianza con la tua funzione
+def kurtosis (sample) :
+    mean = media (sample)  # Calcola la media con la tua funzione
+    variance = varianza (sample)  # Calcola la varianza con la tua funzione
     n = len(sample)
     kurt = np.sum((sample - mean)**4) / (n * variance**2) - 3
     return kurt
@@ -992,11 +1103,11 @@ def media (lista) :
 
     
 # Varianza con lista
-def varianza (lista) :
+def varianza_bessel (lista) :
     somma_quadrata = 0
     for elem in lista :
         somma_quadrata = somma_quadrata + (elem - media(lista))**2
-    return somma_quadrata/(len(lista))
+    return somma_quadrata/(len(lista) -1)
 
     
 # Deviaz. standard con lista
