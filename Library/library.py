@@ -5,7 +5,7 @@ import numpy as np
 import time
 import random
 from iminuit import Minuit
-from iminuit.cost import LeastSquares
+from iminuit.cost import LeastSquares, ExtendedBinnedNLL
 
 
 # ----------------- TIME -----------------
@@ -17,7 +17,7 @@ t_start = time.time()
 ... funzione di cui si vuole sapere il tempo di esecuzione
 t_end = time.time()
 
-# a schermo printerò
+# a schermo printerò:
 
 print(f"Tempo impiegato per eseguire: {(t_end - t_start):.2f} secondi.")    # il .2 serve a stabiliare il numero di cifre significative, se ne voglio 3 userò .3
 
@@ -57,8 +57,10 @@ lista.reverse(): Inverte l’ordine degli elementi nella lista in loco.
 Concatenazione: lista1 + lista2             # restituisce una nuova lista combinata.
 Ripetizione: lista * n restituisce          # una lista ripetuta n volte.
 Verifica presenza: elemento in lista        # restituisce True se l’elemento è presente.
-Slicing: lista[start:stop:step]             # estrae una porzione della lista. Ad esempio lista[:50] prende solo i primi 50 elementi.    lista[50:] gli ultimi 50           lista[0:25:1] prende 1, 2, 3,..., 25
+Slicing: lista[start:stop:step]             # estrae una porzione della lista. Ad esempio lista[:50] prende solo i primi 50 elementi    lista[50:] gli ultimi 50       lista[0:25:1] prende 1, 2, 3,..., 25
 '''
+
+
 
 # ----------------- OPERAZIONI CON ARRAY -----------------
 
@@ -130,11 +132,46 @@ np.sort(array, axis=-1): Ordina gli elementi lungo un asse.
 
 
 
-# ----------------- LETTURA E SCRITTURA FILE .TXT -----------------
+# ----------------- OPERAZIONI CON DICTIONARY ----------------- (esempi)
+'''
+Creazione di un dizionario: my_dict = {"Name": "Alice", "age": 25}
+
+Accedere ai valori: name = my_dict["Name"]                          # mi restituisce "Alice"
+Accedere ai valori: my_dict.get("age")                              # mi restituisce 25
+
+Aggiungere oggetti: my_dict["city"] = "New York"
+Aggiornare oggetto: my_dict["age"] = 26
+
+Rimuovere oggetti: del my_dict["age"]
+Rimuovere e ritornare l'oggetto tolto: value = my_dict.pop ("city") # rimuove city e ritorna New York
+
+Iterare su dizionario: for key, value in my_dict.items() :
+                            print (f"{key}: {value}")
+
+Dictionary comprehension: squared_dict = {x: x**2 for x in range (5)}       # restituisce {0: 0, 1: 1, 2:, 4, 3: 9, 4: 16}
+
+Lunghezza dizionario: lunghezza = len (my_dict)
+
+Checking for existence: exists = "name" in my_dict      # True se "name" is a key in my_dict
+
+Copiare un dizionario: copy_dict = my_dict.copy ()
+
+Merging dizionari: merged_dict = {**my_dict, **another_dict}
+'''
+
+
+
+'''
+# ----------------- LETTURA E SCRITTURA FILE.TXT -----------------
+'''
 
 # Funzione di controllo degli argomenti da modificare di volta in volta nel main
 def controllo_arg() :
-    if len(sys.argv) != num_arg :       # Super NB! Nel main inserirò una variabile int chiamata num_arg. prima di chiamare la funzione (Ad esempio: num_arg = int(3) se gli argomenti da passare a linea di comando sono 3 (nome del file compreso) )
+    if len (sys.argv) != num_arg :       
+        '''
+        Super NB! Nel main inserirò una variabile int chiamata num_arg. prima di chiamare la funzione 
+        (Ad esempio: num_arg = int(3) se gli argomenti da passare a linea di comando sono 3 (nome del file compreso) )
+        '''
         print("Inserire il nome del file (compresa l'estensione) e ... .\n")
         sys.exit()
 
@@ -156,18 +193,44 @@ def controllo_arg() :
     print("Numero di elmenti nel file: ", len(sample))
 '''
 
-'''
-np.savetxt ("nome_del_file.txt", vettore)     # qui il file .txt è creato in automatico
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-vettore = np.loadtxt ("nome_del_file.txt")     #legge il file .txt e salva tutto all'interno di un vettore numpy
+# Se il mio file da leggere è su più colonne posso usare
+def leggi_file_dati (nome_file) :
+    '''
+    Legge un file di dati con valori separati da spazi e lo converte in un array NumPy.
+    Argomenti: nome del file (ad esempio mettendo nome_file = "SuperNovae.txt") assicurandosi che sia nella stessa directory
+    Return: tuple, un array NumPy con i dati e il numero di righe del file.
+    '''
+    with open (nome_file, 'r') as file:
+        lines = file.readlines()
+        lista_dati = []
+        
+        for line in lines:
+            lista_string = line.split()
+            list_float = [float(x) for x in lista_string]
+            lista_dati.append(list_float)
+        
+        sample = np.array(lista_dati)
+        N_righe = len(sample)
+    
+    return sample, N_righe              # attenzione che ritorna due valori (array e int)!!!
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 '''
+    np.savetxt ("nome_del_file.txt", vettore)     # qui il file.txt è creato in automatico
+
+    vettore = np.loadtxt ("nome_del_file.txt")                    # legge il file.txt e salva tutto all'interno di un vettore numpy
+    vettore = np.loadtxt ("nome_del_file.txt", unpack = True)     # unpack in questo caso è necessario perchè ho più colonne
+'''
+
 
 # ----------------- MATPLOTLIB -----------------
 
-
 # Funzione sturges per il binnaggio (funziona discretamente bene, ma conviene sempre veerificare)
 def sturges (N_eventi) :
-    return ceil (1 + np.log2 (N_eventi))       # ceil appartiene alla libreria math, si può usare anche np.ceil (appartiene a numpy)
+    return int (ceil (1 + np.log2 (N_eventi)))      # ceil appartiene alla libreria math, si può usare anche np.ceil (appartiene a numpy)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -175,7 +238,7 @@ def sturges (N_eventi) :
 '''
     bin_edges = np.linspace(x_min, x_max, Nbin)         # Regola la dimensione dei bin e Nbin = numero di bin
     fig, ax = plt.subplots (nrows = 1, ncols = 1)
-    ax.hist (sample, bins=bin_edges ,color = 'orange')  # Spesso conviene usare bins = 'auto' evitando di scrivere la linea di codice con bin_edges, per farlo però bisogna importare numpy
+    ax.hist (sample, bins=bin_edges, color = 'orange')
     ax.set_title ('Nome istogramma', size = 14)
     ax.set_xlabel ('x')
     ax.set_ylabel ('y')
@@ -203,7 +266,7 @@ def sturges (N_eventi) :
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-# Disegno di una distribuzione una accanto all'altra
+# Disegno di una distribuzione una accanto all'altra (il seguente è un esempio)
 '''
     x_axis = np.linspace(0, 10, 100)
 
@@ -256,22 +319,24 @@ def sturges (N_eventi) :
     plt.show ()                                     # da mettere alla fine se no blocca tutto
 '''
 
+'''
 # ----------------- FUNZIONI UTILI -----------------
-
+'''
 # Funzione retta
 def retta (x, m, q) :
     return m * x + q
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-def polinomio_grad3 (x, a, b, c, d) :
-    return a * (x**3) + b * (x**2) + c * x + d
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
 # funzione parabola
 def parabola (x, a, b, c) :
     return a * (x**2) + b * x + c
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+# Funzione polinomiale grado 3
+def polinomio_grad3 (x, a, b, c, d) :
+    return a * (x**3) + b * (x**2) + c * x + d
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -312,11 +377,11 @@ def Fibonacci (n) :
     
     # definisco una lista iniziale con almeno due numeri (i primi due)
     lista_fibo = [0, 1]
-    contatore = len(lista_fibo)            # Conta il numero di elementi nella lista
+    contatore = len (lista_fibo)            # Conta il numero di elementi nella lista
     
     while (contatore < n) :
         prossimo_num = lista_fibo[contatore-1] + lista_fibo[contatore-2]        # Somma il numero precedente all'i-esimo al i-esimo meno due
-        lista_fibo.append(prossimo_num)         # Aggiunge il prossimo numero alla fine della lista
+        lista_fibo.append (prossimo_num)         # Aggiunge il prossimo numero alla fine della lista
         contatore = contatore + 1       # Incrementa il numero di elementi nella lista alla fine di ofni iterazione
     return lista_fibo
 
@@ -326,7 +391,7 @@ def Fibonacci (n) :
 def soluz_eq_secondo_grado (a, b, c) :
 
     if a == 0 :                                                     # Non sarebbe una eq. di secondo grado e dividerei per 0 (no buono)
-        return print("Non è una equazione di econdo grado")
+        return print ("Non è una equazione di econdo grado")
     
     else :
         delta = (b**2) - (4*a*c)                                        # Calcolo il delta per dividere i casi
@@ -337,14 +402,15 @@ def soluz_eq_secondo_grado (a, b, c) :
     
         elif delta == 0 :                                               # mi basta stampare una sola soluzione (sono uguali)
             x1 = x2 = -b/(2*a)
-            return print("La soluzione è x = ", x1)
+            return print ("La soluzione è x = ", x1)
     
         #elif delta < 0 :                                                # Dovrei introdurre i complessi (che sbatti)
         else :
-            return print("Non eiste soluzione per ogni x appartenente ai numeri reali.")
+            return print ("Non eiste soluzione per ogni x appartenente ai numeri reali.")
 
-
+'''
 # ----------------- NUMERI PSEUDOCASUALI -----------------
+'''
 
 # Default dalla libreria random
 '''
@@ -385,6 +451,22 @@ def rand_TAC (f, x_min, x_max, y_max) :
     return x
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione che genera numeri pseudocasuali con TAC e distribuz. gaussiana
+def rand_TAC_gaus (mu, sigma, N) :
+    sample = []
+    y_max = 1.
+    for i in range (N) :
+        x = rand_range (mu - 3. * sigma, mu + 3. * sigma)
+        y = rand_range (0., y_max)
+        while (y > np.exp (-0.5 * ( ((x - mu) / sigma)**2) ) ) :
+            x = rand_range (mu - 3. * sigma, mu + 3. * sigma)
+            y = rand_range (0., y_max)
+        sample.append (x)
+    return sample
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 # Funzione rand_TAC con la funzione norm.pdf di scipy.stats. da implementare nel main con un ciclo for
 def rand_TAC_norm (f, x_min, x_max, y_max, loc, scale) :
     x = rand_range (x_min, x_max)
@@ -393,6 +475,23 @@ def rand_TAC_norm (f, x_min, x_max, y_max, loc, scale) :
         x = rand_range (x_min, x_max)
         y = rand_range (0, y_max)
     return x
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione che genera numeri pseudocasuali con TAC e distribuz. exp
+def rand_TAC_exp (lambd, N) :       # N numero di num pseudocas da generare
+    sample = []
+    y_max = lambd
+    tau = 1/lambd
+    x_max = 3 * tau
+    for i in range (N) :
+        x = rand_range (0., x_max)
+        y = rand_range (0., y_max)      # pongo lambd come y_max 
+        while (y > lambd * (np.exp (- x * lambd))) :
+            x = rand_range (0., x_max)
+            y = rand_range (0., y_max)
+        sample.append (x)
+    return (sample)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -416,10 +515,60 @@ def rand_TCL_par_gauss (mean, sigma, N) :           # par_gauss = parametri gaus
         y += rand_range (xMin, xMax)
     y /= N 
     return y 
+        
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione da implimentare nel main per la generazione di numeri pseudocasuali 
+# secondo una distribuzione esponenziale
+def rand_exp_inversa (t) :
+    return -1. * np.log (1 - random.random()) * t
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-# Funzione bisezione NON ricorsiva per la ricerca degli zeri
+#Funzione da implimentare nel main per la generazione di numeri pseudocasuali secondo una distribuzione esponenziale 
+# dove y dipende da un seed scelto da me
+def exp_inversa_seed (t, y) :
+    return -1 * np.log (1 - y) * t
+'''
+se voglio usar un seed diverso da quello basato sull'orario 
+posso usare random.seed(seed) prima di chiamare questa funzione che dovrà contenere random.random()
+'''
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Rand poissoniana per singolo evento
+def rand_pois (mean, t_m = 1.) :
+    t_tot = rand_exp_inversa (t_m)
+    N_evt = 0
+    while (t_tot < mean) :
+        N_evt = N_evt + 1
+        t_tot = t_tot + rand_exp_inversa (t_m)
+    return N_evt
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Rand poissoniana per N eventi
+def rand_pois_Neventi (mean, N, t_m = 1.) :
+    v = []
+    for i in range(N) :
+        x = rand_pois(mean, t_m)
+        v.append(x)
+    return v
+
+#  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Rand per i decadimenti radioattivi  (è uguale a rand_pois ma cambiano solo 
+# i nomi delle variabili per chiarezza)
+def rand_pois_new (t_misura, t_dec) :
+    t = rand_exp_inversa(t_dec)
+    N_evt = 0
+    while (t < t_misura) :
+        N_evt = N_evt + 1
+        t = t + rand_exp_inversa(t_dec)
+    return N_evt
+
+
+#Funzione bisezione NON ricorsiva per la ricerca degli zeri
 def bisezione (
     f,                  # funzione di cui trovare lo zero
     x_min,              # minimo dell'intervallo
@@ -533,52 +682,11 @@ def sezione_aurea_ric_max (f, x0, x1, precision = 0.0001) :
         
     else :
         return sezione_aurea_ric_max (f, x0, x2, precision)
-        
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-#Funzione da implimentare nel main per la generazione di numeri pseudocasuali secondo una distribuzione esponenziale
-def rand_exp_inversa (t) :
-    return -1. * np.log (1 - random.random()) * t
 
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-#Funzione da implimentare nel main per la generazione di numeri pseudocasuali secondo una distribuzione esponenziale dove y dipende da un seed scelto da me
-def exp_inversa_seed (t, y) :
-    return -1 * np.log (1 - y) * t    # se voglio usar un seed diverso da quello basato sull'orario posso usare random.seed(seed) prima di chiamare questa funzione che dovrà contenere random.random()
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-#Rand poissoniana per singolo evento
-def rand_pois (mean, t_m = 1.) :
-    t_tot = rand_exp_inversa (t_m)
-    N_evt = 0
-    while (t_tot < mean) :
-        N_evt = N_evt + 1
-        t_tot = t_tot + rand_exp_inversa (t_m)
-    return N_evt
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-#Rand poissoniana per N eventi
-def rand_pois_Neventi (mean, N, t_m = 1.) :
-    v = []
-    for i in range(N) :
-        x = rand_pois(mean, t_m)
-        v.append(x)
-    return v
-
-#  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-#Rand per i decadimenti radioattivi     (è uguale a rand_pois ma cambiano solo i nomi delle variabili per chiarezza)
-def rand_pois_new (t_misura, t_dec) :
-    t = rand_exp_inversa(t_dec)
-    N_evt = 0
-    while (t < t_misura) :
-        N_evt = N_evt + 1
-        t = t + rand_exp_inversa(t_dec)
-    return N_evt
-
-#  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+'''
+# ------------------- Sezione Integrazione -------------------
+'''
 
 #Funzione per il calcolo dell'integrale (area) e scarto secondo il metodo Hit Or Miss
 def integral_HOM (f, x_min, x_max, y_min ,y_max, N_punti) :
@@ -617,11 +725,23 @@ def integrale_MonteCarlo (f, x_min, x_max, N_punti) :
 
 #  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-#Funzione likelihood logaritmica
-def loglikelihood (an_array, pdf, para) :
+#Funzione likelihood logaritmica CON UN SOLO PARAMETRO DA DETERMINARE
+def loglikelihood_single_para (an_array, pdf, para) :
     result = 0.
     for x in an_array :
         val_pdf = pdf (x, para)
+        if val_pdf > 0. :
+            result = result + np.log (val_pdf)
+    return result
+
+#  ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione likelihood logaritmica CON PIU' PARAMETRI DA DETERM
+# qui para deve essere una lista
+def loglikelihood_N_para (an_array, pdf, para) :
+    result = 0.
+    for x in an_array :
+        val_pdf = pdf (x, *para)
         if val_pdf > 0. :
             result = result + np.log (val_pdf)
     return result
@@ -637,7 +757,7 @@ def sezioneAureaMax_LL(
     x1,             # altro estremo dell'intervallo
     prec=0.0001     # precisione della funzione
 ) :
-    r = 0.618  # Costante aurea
+    r = 0.618       # Costante aurea
     x2 = 0.
     x3 = 0.
     larghezza = abs(x1 - x0)
@@ -730,7 +850,14 @@ print (my_minuit.covariance.correlation ())
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-def esegui_fit (x, y, sigma, dizionario_par, funzione_fit) :
+# Funzione che esegue il fit con metodo dei minimi quadrati
+def esegui_fit (
+        x,                  # vettore x (np.array)
+        y,                  # vettore y (np.array)
+        sigma,              # vettore dei sigma (np.array)
+        dizionario_par,     # dizionario con parametri 
+        funzione_fit        # funzione del modello da fittare
+    ) :
 
     if not (isinstance(dizionario_par, dict)) :
         print ("Inserisci un dizionario come quarto parametro.\n")
@@ -760,8 +887,42 @@ def esegui_fit (x, y, sigma, dizionario_par, funzione_fit) :
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
+# Funzione per il fit con loglikelihood
+def esegui_fit_LL (
+        bin_content,        # contenuto dei bin
+        bin_edges,          # larghezza dei bin
+        dizionario_par,     # dizionario con parametri da determinare
+        funzione_fit        # funzione modello da fittare
+    ) :
 
-# ----------------- STATISTICHE -----------------
+    if not (isinstance (dizionario_par, dict)) :
+        print ("Inserisci: bin_content, bin_edges, dizionario parametri e funzione da fittare.\n")
+        sys.exit()
+
+    funzione_costo = ExtendedBinnedNLL (bin_content, bin_edges, funzione_fit)
+    my_minuit = Minuit (funzione_costo, **dizionario_par)
+    my_minuit.migrad ()                                 
+    my_minuit.hesse ()                                  
+
+    is_valid = my_minuit.valid
+    N_dof = my_minuit.ndof
+    matrice_cov = my_minuit.covariance
+
+    diz_risultati = {
+        "Validità": is_valid,
+        "Ndof": N_dof,
+        "Param": my_minuit.parameters,
+        "Value": my_minuit.values,
+        "Errori": my_minuit.errors,
+        "MatriceCovarianza": matrice_cov
+    }
+
+    return diz_risultati
+
+
+'''
+# ------------------- STATISTICHE -------------------
+'''
 
 # Media con array
 def media (sample) :
@@ -773,8 +934,8 @@ def media (sample) :
 # Varianza con array
 def varianza (sample) :
     somma_quadrata = 0
-    somma_quadrata = np.sum( (sample - media(sample))**2 )
-    var = somma_quadrata/(len(sample))
+    somma_quadrata = np.sum( (sample - media (sample))**2 )
+    var = somma_quadrata/(len (sample))
     return var
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -790,7 +951,7 @@ def varianza_bessel (sample) :
 
 # Deviaz. standard con array
 def dev_std (sample) :
-    sigma = np.sqrt(varianza(sample))
+    sigma = np.sqrt (varianza(sample))
     return sigma
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -800,8 +961,6 @@ def dev_std_media (sample) :
     return dev_std(sample) / (np.sqrt( len(sample) ))
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-# LE SEGUENTI DUE FUNZIONI SONO COMMENTATE POICHè NON SONO STATE ANCORA CORRETTE O TESTATE QUINDI ATTENZIONE AD INCLUDERLE NEI PROGRAMMI
 
 # Skewness con array
 def skewness(sample):
@@ -824,7 +983,8 @@ def kurtosis(sample):
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-# Se invece volessi usare delle semplici liste senza i numpy array posso usare le seguenti funzioni (meglio usare numpy che è più veloce)
+# Se invece volessi usare delle semplici liste senza i numpy array 
+# posso usare le seguenti funzioni (meglio usare numpy che è più veloce)
 '''
 # Media con lista
 def media (lista) :
