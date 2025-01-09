@@ -1,4 +1,4 @@
-# Librerie necessarie affinchè la library.py funzioni
+# Librerie necessarie affinchè la library.py funzioni (non tutte sono state usate)
 import sys
 from math import sqrt, ceil, pow
 import numpy as np

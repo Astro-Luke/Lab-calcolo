@@ -59,7 +59,7 @@ def leggi_file_dati (nome_file):
     Argomenti: nome del file (ad esempio mettendo nome_file = "SuperNovae.txt") assicurandosi che sia nella stessa directory
     Return: tuple, un array NumPy con i dati e il numero di righe del file.
     '''
-    with open(nome_file, 'r') as file:
+    with open (nome_file, 'r') as file:
         lines = file.readlines()
         lista_dati = []
         

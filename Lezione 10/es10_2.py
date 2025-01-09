@@ -1,5 +1,6 @@
 '''
-Rappresenta graficamente il profilo della funzione di verosimiglianza e il punto identificato come suo massimo.
+Rappresenta graficamente il profilo della funzione di verosimiglianza e 
+il punto identificato come suo massimo.
 '''
 
 import numpy as np

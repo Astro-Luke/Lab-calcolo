@@ -24,8 +24,8 @@ def main () :
     diz_result = esegui_fit (redshift, distanza, errore, diz_par_lin, legge_hubble)     # fit con legge lineare
 
     print ("\nEsito del Fit: ", diz_result["Validità"])
-    print ("\nNumero di gradi di libertà: ", diz_result["Qsquared"])
-    print ("\nValore del Q-quadro: ", diz_result["Ndof"], "\n")
+    print ("\nNumero di gradi di libertà: ", diz_result["Ndof"])
+    print ("\nValore del Q-quadro: ", diz_result["Qsquared"], "\n")
 
     print("Matrice di covarianza:\n", diz_result["MatriceCovarianza"])
 
@@ -105,7 +105,7 @@ def main () :
     x_fit_subsample = np.linspace (min(redshift_subsample), max(redshift_subsample), 500)             # asse delle x da mettere nel grafico
     y_fit_subsample = accelerazione_uni (x_fit_subsample, *diz_result_subsample["Value"])         # calcolo le y da mettere nel grafico con la funzione accelerata
 
-    fig, ax = plt.subplots(nrows = 1, ncols = 1, figsize = (10, 5))   # 1 riga, 1 colonna
+    fig, ax = plt.subplots (nrows = 1, ncols = 1, figsize = (10, 5))   # 1 riga, 1 colonna
     ax.errorbar (redshift_subsample, distanza_subsample, xerr = 0.0, yerr = errore_subsample,
         markersize = 3,                             # dimensione del punto
         fmt = 'o',                                  # tipo di marker (punto)
