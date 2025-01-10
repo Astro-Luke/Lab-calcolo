@@ -16,34 +16,26 @@ def rand_range (x_min, x_max) :
 #Funzione che genera numeri pseudocasuali gaussiani con TAC
 def rand_TAC_gaus (mu, sigma) :
     y_max = 1.
-    x = rand_range (0., mu + 3. * sigma)
+    if (mu - 3. * sigma) < 0 :
+        x_sx = 0.
+    else :
+        x_sx = mu - 3. * sigma
+    x = rand_range (x_sx, mu + 3. * sigma)
     y = rand_range (0., y_max)
     while (y > np.exp (-0.5 * ( ((x - mu) / sigma)**2) ) ) :
-        x = rand_range (0., mu + 3. * sigma)
+        x = rand_range (x_sx, mu + 3. * sigma)
         y = rand_range (0., y_max)
-    return x, y
+        print (x)
+    return x
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-# Funzione che genera numeri pseudocasuali partendo dal teorema centrale del limite usando media, sigma di una gaussiana
-# ed N numero di eventi pseudocasuali
-def rand_TCL_par_gauss (mean, sigma, N) :           # par_gauss = parametri gaussiani
-    y = 0. ; 
-    xMin = np.abs(mean - np.sqrt(3 * N) * sigma)
-    xMax = np.abs(mean + np.sqrt(3 * N) * sigma)
-    for i in range (N) :
-        y += rand_range (xMin, xMax)
-    y /= N 
-    return y 
-
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-
-def random_walk (mean, sigma, N_num, N_passi) :
+def random_walk (mean, sigma, N_passi) :
     asse_x = [0.]
     asse_y = [0.]
     for _ in range (N_passi) : 
-        theta = 360 * rand_range (0., 1.)
-        ro = rand_TCL_par_gauss (mean, sigma, N_num)
+        theta = rand_range (0., 360.)
+        ro = rand_TAC_gaus (mean, sigma)
         x = ro * np.cos (theta)
         y = ro * np.sin (theta)
         asse_x.append (x)

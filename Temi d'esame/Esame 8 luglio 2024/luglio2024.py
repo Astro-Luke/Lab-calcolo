@@ -4,7 +4,7 @@ python3 luglio2024.py
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import rayleigh
-from lib import random_walk, calcola_distanza, sturges, media, varianza_bessel, skewness, kurtosis
+from lib import random_walk, calcola_distanza, media, varianza_bessel, skewness, kurtosis
 
 def main () :
 
@@ -12,7 +12,7 @@ def main () :
     mean = 1.
     sigma = 0.2
     N_passi = 10
-    coord_x, coord_y = random_walk (mean, sigma, 100, N_passi)
+    coord_x, coord_y = random_walk (mean, sigma, N_passi)
     
     #print ("\n", coord_x, "\n")
     #print (coord_y)
@@ -39,7 +39,7 @@ def main () :
     coord_y_pop = []
     list_distanze = []
     for _ in range (N_persone) :
-        coord_x, coord_y = random_walk (mean, sigma, 100, N_passi)
+        coord_x, coord_y = random_walk (mean, sigma, N_passi)
         distanza = calcola_distanza (0., coord_x[10], 0., coord_y[10])
         list_distanze.append (distanza)
         coord_x_pop.append (coord_x)
