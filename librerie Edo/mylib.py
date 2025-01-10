@@ -1,6 +1,6 @@
 '''
 libreria mylib contiene:
-    STATISTICHE:   (riga 90)
+    STATISTICHE:   (riga 90)  riga in realtà non più precisa perchè ho aggiunto cose
         median
         mean
         variance
@@ -69,8 +69,17 @@ libreria mylib contiene:
         esponenziale
         Fibonacci
         soluz_eq_secondo_grado
+        
+    DISTRIBUZIONI:      (riga 1414)
+        binomial_coefficient
+        binomial_distribuition
+        bernoulli_trial
+        poisson_distribution
+        cauchy_distribution
+        maxwell_boltzmann_distribution
+        breit_wigner_distribution
 
-    FINE LIBRERIE:    (riga 1414)
+    FINE LIBRERIE:    
         argomenti lezioni
         pezzi di codice utili
         fit
@@ -82,10 +91,14 @@ libreria mylib contiene:
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from math import sqrt, ceil, floor, log, gcd
+from math import sqrt, ceil, floor, log, gcd, factorial, pow
 import random
+import time
 
+from iminuit import Minuit
+from iminuit.cost import LeastSquares, ExtendedBinnedNLL
 
+from IPython.display import display
 
 #------------------------------STATISTICHE----------------------
 
@@ -178,16 +191,19 @@ def percentile(x,p):
 
 #---------------------------STURGES--------------------------------
 
-
-
+#versione che compare nelle correzioni dei temi, non dovrebbe cambiare nulla 
 def sturges (N_events) :
-    '''
+        '''
     algoritmo per calcolo del numero di bin ideale data la lunghezza del campione.
     Ideale per array di lunghezza non troppo piccola nè troppo grande
     per array grande (>10000) conviene cercare altri metodi, ad esempio usare la radice quadrata
     '''
-    return int( np.ceil( 1 + np.log2(N_events) ) )
+    return int( np.ceil( 1 + 3.322 * np.log (N_events) ) )
 
+'''
+def sturges (N_events) :
+    return int( np.ceil( 1 + np.log2(N_events) ) )
+'''
     
     
 #----------------------------ESTREMI---------------------------------
@@ -1193,7 +1209,7 @@ class stats :
         return sqrt (self.variance (bessel))
 
 
-    def sigma_mean (self, bessel = True) :
+    def sigma_mean (self, bessel = True) :  #errore sulla media
         '''
         calculates the sigma of the sample present in the object
         '''
@@ -1243,7 +1259,7 @@ class stats :
 
  #----------------------------------
 
-
+#in altrelib.py ci sono le funzioni definite per gli istogrammi senza passare da una classe
 class my_histo :
     '''calculator for statistics of a list of numbers'''
 
@@ -1410,6 +1426,120 @@ def soluz_eq_secondo_grado (a, b, c) :
 
 
 
+#-----------------------------------------DISTRIBUZIONI----------------------------        
+        
+        
+
+# Calcolo del coefficiente binomiale
+def binomial_coefficient (n, k) :
+    '''
+    Calcola il coefficiente binomiale (n choose k).
+    
+    Args:
+        n (int): Numero totale di elementi.
+        k (int): Numero di elementi scelti.
+    
+    Returns:
+        int: Coefficiente binomiale.
+    '''
+    if k < 0 or k > n:
+        return 0  # Il coefficiente è definito solo per 0 <= k <= n
+    return factorial(n) // (factorial(k) * factorial(n - k))
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione per la distribuzione binomiale
+def binomial_distribution (n, k, p) :
+    '''
+    Calcola la probabilità della distribuzione binomiale.
+    
+    Args:
+        n (int): Numero totale di prove.
+        k (int): Numero di successi desiderati.
+        p (float): Probabilità di successo in una singola prova.
+    
+    Returns:
+        float: Probabilità associata.
+    '''
+    coeff_binomiale = np.math.comb(n, k)
+    return coeff_binomiale * (p ** k) * ((1 - p) ** (n - k))
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+# Funzione Bernulli Trials
+def bernoulli_trial (p) :
+    '''
+    Esegue una singola prova di Bernoulli.
+    Args:
+        p (float): Probabilità di successo.
+    Returns:
+        int: 1 per successo, 0 per fallimento.
+    '''
+    if np.random.random() < p :
+        return 1
+    else :
+        return 0
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione distribuzione Poisson
+def poisson_distribution (lmbda, k) :
+    '''
+    Calcola la probabilità della distribuzione di Poisson.
+    Args:
+        lmbda (float): Tasso medio di successo (lambda).
+        k (int): Numero di eventi osservati.
+    Returns:
+        float: Probabilità associata.
+    '''
+    return (np.exp(-lmbda) * (lmbda ** k)) / np.math.factorial(k)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione distribuzione di Cauchy
+def cauchy_distribution (x, x0, gamma) :
+    '''
+    Calcola la funzione di densità di probabilità della distribuzione di Cauchy.
+    Args:
+        x (float): Variabile indipendente.
+        x0 (float): Posizione del picco della distribuzione (mediana).
+        gamma (float): Larghezza a metà altezza (HWHM).
+    Returns:
+        float: Valore della densità di probabilità.
+    '''
+    return (1 / np.pi) * (gamma / ((x - x0)**2 + gamma**2))
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione distribuzione di Maxwell Boltzmann
+def maxwell_boltzmann_distribution (v, a) :
+    '''
+    Calcola la funzione di densità di probabilità della distribuzione di Maxwell-Boltzmann.
+    Args:
+        v (float): Velocità delle particelle.
+        a (float): Parametro della distribuzione legato alla temperatura e alla massa.
+    Returns:
+        float: Valore della densità di probabilità.
+    '''
+    return np.sqrt(2 / np.pi) * (v**2) * np.exp(-v**2 / (2 * a**2)) / (a**3)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+#Funzione distribuzione Breit Wigner
+def breit_wigner_distribution (x, x0, gamma) :
+    '''
+    Calcola la funzione di densità di probabilità della distribuzione di Breit-Wigner.
+    Args:
+        x (float): Variabile indipendente.
+        x0 (float): Posizione del picco (massa del risonante, per esempio).
+        gamma (float): Larghezza a metà altezza (HWHM).
+    Returns:
+        float: Valore della densità di probabilità.
+    '''
+    return (1 / np.pi) * (gamma / 2) / ((x - x0)**2 + (gamma / 2)**2)
+
+        
+           
     
 #-----------------------------------------FINE LIBRERIE-------------------------------------    
  
@@ -1554,7 +1684,7 @@ per eseguire i fit devo importare le seguenti librerie:
 from iminuit import Minuit
 from iminuit.cost import LeastSquares
 
-
+-------------------MINIMI QUADRATI-----------------------
 least_squares = LeastSquares (x, y, sigma, funzione_da_fittare)        # La funzione costo che verrà minimizzata
 my_minuit = Minuit (least_squares, par0 = 0, par1 = 0)                 # La classe Minuit va ad effettuare la minimizzazione, 
                                                                        # prende in ingresso la funzione costo ed i parametri iniziali.
@@ -1594,6 +1724,14 @@ print (my_minuit.covariance)
 
 # Mentre la matrice di correlazione con:
 print (my_minuit.covariance.correlation ())
+
+---------------------VISUALIZZARE RISULTATO FIT CON TABELLOZZE------------
+
+from IPython.display import display
+
+my_minuit.migrad ()
+print (my_minuit.valid)
+display (my_minuit)
 '''
 
 #la lascio commentata perchè mai testata
@@ -1764,7 +1902,35 @@ np.sort(array, axis=-1): Ordina gli elementi lungo un asse.
 '''
 
 
-#-------- Utilizzo di sys.argv
+# ----------------- OPERAZIONI CON DICTIONARY ----------------- (esempi)
+'''
+Creazione di un dizionario: my_dict = {"Name": "Alice", "age": 25}
+
+Accedere ai valori: name = my_dict["Name"]                          # mi restituisce "Alice"
+Accedere ai valori: my_dict.get("age")                              # mi restituisce 25
+
+Aggiungere oggetti: my_dict["city"] = "New York"
+Aggiornare oggetto: my_dict["age"] = 26
+
+Rimuovere oggetti: del my_dict["age"]
+Rimuovere e ritornare l'oggetto tolto: value = my_dict.pop ("city") # rimuove city e ritorna New York
+
+Iterare su dizionario: for key, value in my_dict.items() :
+                            print (f"{key}: {value}")
+
+Dictionary comprehension: squared_dict = {x: x**2 for x in range (5)}       # restituisce {0: 0, 1: 1, 2:, 4, 3: 9, 4: 16}
+
+Lunghezza dizionario: lunghezza = len (my_dict)
+
+Checking for existence: exists = "name" in my_dict      # True se "name" is a key in my_dict
+
+Copiare un dizionario: copy_dict = my_dict.copy ()
+
+Merging dizionari: merged_dict = {**my_dict, **another_dict}
+'''
+
+
+#-------- Utilizzo di sys.argv--------
 '''
 import sys 
 sys.argv: lista che contiene tutte le parole scritte dopo python3
