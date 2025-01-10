@@ -13,6 +13,18 @@ def rand_range (x_min, x_max) :
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
+#Funzione che genera numeri pseudocasuali gaussiani con TAC
+def rand_TAC_gaus (mu, sigma) :
+    y_max = 1.
+    x = rand_range (0., mu + 3. * sigma)
+    y = rand_range (0., y_max)
+    while (y > np.exp (-0.5 * ( ((x - mu) / sigma)**2) ) ) :
+        x = rand_range (0., mu + 3. * sigma)
+        y = rand_range (0., y_max)
+    return x, y
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 # Funzione che genera numeri pseudocasuali partendo dal teorema centrale del limite usando media, sigma di una gaussiana
 # ed N numero di eventi pseudocasuali
 def rand_TCL_par_gauss (mean, sigma, N) :           # par_gauss = parametri gaussiani
