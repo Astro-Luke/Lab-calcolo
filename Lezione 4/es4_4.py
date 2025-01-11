@@ -12,7 +12,7 @@ import numpy as np
 
 def controllo_arg() :
     if len(sys.argv) < 3 :
-        print("Manca il nome del file da passare a linea di comando.\n")
+        print("Inserire xmin ed xmax.\n")
         sys.exit()
         
 def main () :

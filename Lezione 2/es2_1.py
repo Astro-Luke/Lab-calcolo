@@ -29,4 +29,5 @@ def crea_array(N):
     print("Array di double con linspace: ", doub_array)
 
 if __name__ == '__main__':
+    
     crea_array(10)          # 10 è il numero di elementi per gli array vuoto e di zeri

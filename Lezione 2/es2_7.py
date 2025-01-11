@@ -1,12 +1,8 @@
 '''
 Scrivere una libreria Python contenente funzioni per eseguire le seguenti operazioni sugli array NumPy 1D:
-
 Calcola la media dei suoi elementi
-
 Calcola la varianza dei suoi elementi
-
 Calcola la deviazione standard dei suoi elementi
-
 Calcola la deviazione standard dalla media dei suoi elementi
 '''
 

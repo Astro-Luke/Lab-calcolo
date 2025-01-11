@@ -3,9 +3,9 @@ Implementare una funzione che calcoli il fattoriale di un numero utilizzando una
 '''
 
 import sys
+from library import fattoriale
 
 # ----- ----- Funzioni ----- -----
-from library import fattoriale
 
 # Funzione di controllo degli argomenti da modificare di volta in volta nel main
 def controllo_arg() :

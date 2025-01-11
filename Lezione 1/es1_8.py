@@ -3,20 +3,21 @@ Scrivi un programma Python che trovi l'elenco dei numeri interi primi inferiori 
 '''
 
 def primo (n) :
-
-    lista = []
-    
-    if n < 2 :
+    if n < 2:
         return False
-    
-    divisori = []
-    for i in range (2, n) :
-        if n%i == 0 :
-            
-        i = i + 1
-    print(lista)
+    for i in range(2, int(n**0.5) + 1):  # Controllo fino alla radice quadrata di n
+        if n % i == 0:
+            return False
+    return True
 
+def numeri_primi_inferiori_a_100 ():
+    lista_primi = []
+    for num in range (2, 100):  # Controlliamo tutti i numeri da 2 a 99
+        if primo (num):
+            lista_primi.append (num)
+    return lista_primi
 
 if __name__ == '__main__' :
 
-    primo(100)
+    lista = numeri_primi_inferiori_a_100 ()
+    print(lista)
