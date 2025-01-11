@@ -25,7 +25,7 @@ def main () :
     print("Il massimo della funzione è: ", massimo)
     print(f"Tempo impiegato per eseguire: {1000*(t_end - t_start):.6f} millisecondi.")
     
-    x_axis = np.linspace(x_min, x_max, 100)
+    x_axis = np.linspace(x_min, x_max, 500)
     fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(10, 5))  # 1 riga, 1 colonna
     axes.plot(x_axis, function(x_axis), label = "funzione")   # con esponenziale.pdf uso la funzione predefinita nella libreria scipy
     axes.legend()

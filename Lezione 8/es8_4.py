@@ -21,13 +21,13 @@ def controllo_arg() :
 
 def main () :
     
-    controllo_arg ()
+    #controllo_arg ()
     
     x_min = -10.
     x_max = 10.
     
-    N_evet = int (sys.argv[1])
-    N_toy = int (sys.argv[2])
+    N_evet = 100 #int (sys.argv[1])
+    N_toy = 1000 #int (sys.argv[2])
 
     std_lista = []
     std_N_toys = []
@@ -57,7 +57,7 @@ def main () :
     ax.grid ()
 
     plt.savefig ("es8_4.png")
-    #plt.show ()
+    plt.show ()
     
 if __name__ == "__main__" :
     main ()

@@ -12,18 +12,18 @@ import random
 from library import rand_range, exp_inversa_seed, sturges
 
 # ----- ----- ----- ----- ----- ----- ----- -----
-
+'''
 def controllo_arg() :
     if len(sys.argv) < 3 :
         print("Manca il nome del file da passare a linea di comando.\n")
         sys.exit()
-
+'''
 # ----- main -----
 
 def main () :
     
-    t = float(sys.argv[1])
-    N = int(sys.argv[2])
+    t = 2.4 #float(sys.argv[1])
+    N = 10000 #int(sys.argv[2])
     
     if t <= 0 :
         print("Il parametro t dell'esponenziale deve essere positivo!")

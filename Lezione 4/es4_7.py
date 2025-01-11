@@ -1,9 +1,11 @@
 '''
-Implementare un generatore di numeri pseudo-casuali che utilizzi il metodo del teorema del limite centrale per generare eventi distribuiti secondo una distribuzione di probabilità gaussiana.
+Implementare un generatore di numeri pseudo-casuali che utilizzi il metodo del teorema del limite centrale 
+per generare eventi distribuiti secondo una distribuzione di probabilità gaussiana.
 
 Come si può ottenere una distribuzione normale, cioè una distribuzione gaussiana centrata sullo zero con varianza unitaria?
 
-Verificare visivamente che all'aumentare del numero di eventi aumenta la similarità tra la distribuzione ottenuta e la forma funzionale gaussiana, sia graficamente sia utilizzando i momenti delle distribuzioni calcolati sul campione di eventi generato.
+Verificare visivamente che all'aumentare del numero di eventi aumenta la similarità tra la distribuzione ottenuta e 
+la forma funzionale gaussiana, sia graficamente sia utilizzando i momenti delle distribuzioni calcolati sul campione di eventi generato.
 '''
 
 import matplotlib.pyplot as plt
@@ -20,17 +22,19 @@ def controllo_arg() :
 
 def main () :
     
-    x_min = float(sys.argv[1])
-    x_max = float(sys.argv[2])
-    N = int(sys.argv[3])
+    x_min = -1. #float(sys.argv[1])
+    x_max = 1. #float(sys.argv[2])
+    N = 5000 #int(sys.argv[3])
     
     sample = []
     for _ in range (N) :
-        sample.append (rand_TCL (x_min, x_max, N))
+        sample.append (rand_TCL (x_min, x_max))
     
+    Nbin = sturges (N)
     
+    bin_edges = np.linspace (min (sample), max (sample), Nbin)
     fig, ax = plt.subplots (nrows = 1, ncols = 1)
-    ax.hist (sample, bins = 'auto', color = 'orange')
+    ax.hist (sample, bins = bin_edges, color = 'orange')
     ax.set_title ('Istogramma', size = 14)
     ax.set_xlabel ('x')
     ax.set_ylabel ('y')

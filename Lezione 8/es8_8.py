@@ -24,9 +24,9 @@ def controllo_arg() :
 
 def main () :
 
-    controllo_arg ()
+    #controllo_arg ()
 
-    N = int (sys.argv[1])
+    N = 10 #int (sys.argv[1])
     N_max = 1000000
 
     x_min = 0.          # conosco il risultato tra 0 e pi greco quindi mi faccio furbo

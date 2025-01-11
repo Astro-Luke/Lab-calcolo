@@ -14,7 +14,6 @@ Compila un istogramma con i conteggi simulati per ciascun esperimento.
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-import random
 
 from library import sturges, rand_pois_new
 
@@ -29,9 +28,9 @@ def controllo_arg() :
 
 def main () :
 
-    controllo_arg()
+    #controllo_arg()
     
-    N = int(sys.argv[1])    # numero di eventi pseudocasuali
+    N = 1000 #int(sys.argv[1])    # numero di eventi pseudocasuali
     
     t_0 = 3.1       # parametro decadimento
     t_m = 15.       # tempo misura

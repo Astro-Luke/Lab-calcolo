@@ -44,11 +44,12 @@ def main () :
     ax.grid ()
     ax.scatter (tau_max_loglike, log_like_max, marker="o", color="red")         # aggiungo il punto di massimo
 
-    plt.savefig ("es10_2.png")
-
     print ("Confronto tra tau trovato con loglikelihood e media:\n")
     print ("Media: ", media (elenco_n_pseudocasuali), "\n")
     print ("Massimo della loglikelihood: ", tau_max_loglike, "\n")
+
+    plt.savefig ("es10_2.png")
+    plt.show ()
 
 if __name__ == "__main__" :
     main ()

@@ -77,6 +77,7 @@ def main() :
     ax[2].grid ()
 
     plt.savefig ('es9_4.png')
+    plt.show ()
 
 if __name__ == "__main__" :
     main()

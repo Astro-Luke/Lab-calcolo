@@ -1,5 +1,6 @@
 '''
-Use the Python scipy.stat.norm object to determine the area of a normal distributionof its tails outside the range included within an interval of 1, 2, 3, 4, and 5standard deviations around its mean
+Use the Python scipy.stat.norm object to determine the area of a normal distribution of its tails outside the range 
+included within an interval of 1, 2, 3, 4, and 5standard deviations around its mean.
 '''
 
 import numpy as np

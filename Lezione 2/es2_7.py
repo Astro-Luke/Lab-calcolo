@@ -30,10 +30,6 @@ def varianza_bessel (array) :
 def dev_standard (array) :
     var = (varianza(array))**0.5
     return var
-
-#def dev_standard_media (array) :
-#    sigma_mean = dev_standard(array)/((len(array))**0.5)
-#    return sigma_mean
     
 def dev_standard_media (array) :
     sigma_mean = dev_standard(array)/ np.sqrt((len(array)))

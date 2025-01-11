@@ -1,5 +1,6 @@
 '''
-Utilizzare il codice sorgente scritto nell'esercizio precedente per aggiungere alla libreria sviluppata per l'esercizio 1 una funzione che genera numeri casuali secondo la distribuzione di Poisson, con la media degli eventi attesi come parametro di input.
+Utilizzare il codice sorgente scritto nell'esercizio precedente per aggiungere alla libreria sviluppata per l'esercizio 1 
+una funzione che genera numeri casuali secondo la distribuzione di Poisson, con la media degli eventi attesi come parametro di input.
 
 Riscrivi l'esercizio precedente utilizzando questa funzione, disegnando anche l'istogramma della densità di probabilità.
 
@@ -21,14 +22,14 @@ def controllo_arg() :
 
 def main () :
     
-    controllo_arg()
+    #controllo_arg()
     
-    N = int(sys.argv[1])        # numero di eventi pseudocasuali da generare
-    mean = float(sys.argv[2])   # media da passare
+    N = 100 #int(sys.argv[1])        # numero di eventi pseudocasuali da generare
+    mean = 2.4 #float(sys.argv[2])   # media da passare
     
     sample = []
     for _ in range (N) :
-        sample.append(rand_pois(mean))
+        sample.append(rand_pois (mean))
     #print(sample)                              # solo per fare un controllo
     
     # stampa dei momenti della distribuzione
@@ -39,9 +40,7 @@ def main () :
 
     Nbin = sturges(N)
     
-    #print(Nbin, max(sample))           # era solo per fare un controllo
-    
-    bin_edges = np.linspace(-0.5, max(sample) + 0.5, max(sample) + 1)
+    bin_edges = np.linspace (min(sample), max(sample), Nbin)
     fig, ax = plt.subplots (nrows = 1, ncols = 1)
     ax.hist (sample, bins = bin_edges, color = 'orange')
     ax.set_title ('prova', size = 14)

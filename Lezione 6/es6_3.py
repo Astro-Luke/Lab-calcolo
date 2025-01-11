@@ -17,9 +17,9 @@ def controllo_arg() :
 
 def main () :
     
-    controllo_arg()
+    #controllo_arg ()
     
-    N = int (sys.argv[1])
+    N = 10 #int (sys.argv[1])
     
     #x = fattoriale(N)
     print("Valore del fattoriale: ", fattoriale(N))

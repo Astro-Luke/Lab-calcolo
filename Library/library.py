@@ -349,6 +349,12 @@ def polinomio_grad3 (x, a, b, c, d) :
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
+# Gaussiana con sigma = 1 e mu = 0
+def gaussiana (x) :
+    return (1 / (np.sqrt(2 * np.pi))) * np.exp(-0.5 * (x)**2)
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
 #Funzione fattoriale
 def fattoriale (N) :
     if N == 0 :

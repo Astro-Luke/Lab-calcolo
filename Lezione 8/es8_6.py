@@ -24,9 +24,9 @@ def controllo_arg() :
 
 def main () :
     
-    controllo_arg ()
+    #controllo_arg ()
     
-    N_punti = int (sys.argv[1])         # punti sotto la curva
+    N_punti = 10 # int (sys.argv[1])         # punti sotto la curva
     N_punti_max = 1000000
     x_min = 0.          # scelgo tra 0 e pi greco perchè so quanto vale quindi posso vedere al volo se è corretto
     x_max = np.pi

@@ -22,11 +22,11 @@ def controllo_arg() :
 
 def main () :
     
-    t = float(sys.argv[1])
-    N = int(sys.argv[2])
-    seed = float(sys.argv[3])
+    t = 2.4 #float(sys.argv[1])
+    N = 10000 #int(sys.argv[2])
+    seed = 1. #float(sys.argv[3])
     
-    controllo_arg()
+    #controllo_arg()
     
     if t <= 0 :
         print("Il parametro t dell'esponenziale deve essere positivo!")

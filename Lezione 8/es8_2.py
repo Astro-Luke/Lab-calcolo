@@ -22,10 +22,10 @@ def controllo_arg() :
 
 def main () :
     
-    controllo_arg ()
+    #controllo_arg ()
     
-    N_max = int(sys.argv[1])
-    N_toys = int(sys.argv[2])
+    N_max = 1000 #int(sys.argv[1])
+    N_toys = 100 #int(sys.argv[2])
     
     x_min = -10.
     x_max = 10.

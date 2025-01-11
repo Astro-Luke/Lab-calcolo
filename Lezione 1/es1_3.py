@@ -1,7 +1,8 @@
 '''
-Scrivi un programma che, utilizzando un whileciclo, restituisca la sequenza di Fibonacci fino all'n-esimo termine e la memorizzi in un file python list.
+Scrivi un programma che, utilizzando un while ciclo, restituisca la sequenza di Fibonacci fino all'n-esimo termine e 
+la memorizzi in un file python list.
 
-N.B.  Di fatto questo programma risolve anche l'esercizio 1.5'''
+N.B.  Di fatto questo programma risolve anche l'esercizio 1_5'''
 
 import sys
 
@@ -27,6 +28,6 @@ def Fibonacci (n) :
 
 if __name__ == '__main__' :
 
-    n = int(sys.argv[1])        # Passo a linea di comando il numero di iterazioni
+    n = 7 # int(sys.argv[1])        # Passo a linea di comando il numero di iterazioni
     
     print("Sequenza di fibonacci fino al numero", n, ":", Fibonacci(n))

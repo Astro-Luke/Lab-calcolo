@@ -17,12 +17,12 @@ def controllo_arg() :
         
 def main () :
     
-    controllo_arg()
+    #controllo_arg ()
     
     N = 500
     
-    x_min = float(sys.argv[1])
-    x_max = float(sys.argv[2])
+    x_min = 1. #float(sys.argv[1])
+    x_max = 2. #float(sys.argv[2])
     
     sample = []
     for i in range (0, N) :

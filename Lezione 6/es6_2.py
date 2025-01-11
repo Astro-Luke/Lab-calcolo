@@ -21,10 +21,10 @@ def controllo_arg() :
 
 def main () :
 
-    x_min = float(sys.argv[1])      # Passo a linea di comando gli argomenti
-    x_max = float(sys.argv[2])
+    x_min = 0. #float(sys.argv[1])      # Passo a linea di comando gli argomenti
+    x_max = 3.14 #float(sys.argv[2])
 
-    controllo_arg()                 # controllo che siano stati passati correttamente tutti gli argomenti
+    #controllo_arg()                 # controllo che siano stati passati correttamente tutti gli argomenti
 
     t_start = time.time()           # inizio a misurare il tempo
     zero = bisezione_ric(np.cos, x_min, x_max)      # cerco lo zero con la funzione bisezione ricorsiva

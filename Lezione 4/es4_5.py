@@ -1,5 +1,6 @@
 '''
-Implementare un generatore di numeri pseudo-casuali che utilizzi il metodo try-and-catch per generare numeri pseudo-casuali in base a una distribuzione di probabilità arbitraria.
+Implementare un generatore di numeri pseudo-casuali che utilizzi il metodo try-and-catch per generare numeri pseudo-casuali in 
+base a una distribuzione di probabilità arbitraria.
 
 Prendiamo la funzione di densità di probabilità (pdf) come parametro di input per generare numeri casuali.
 

@@ -164,16 +164,16 @@ Merging dizionari: merged_dict = {**my_dict, **another_dict}
 # ----------------- LETTURA E SCRITTURA FILE.TXT -----------------
 '''
 
+
 # Funzione di controllo degli argomenti da modificare di volta in volta nel main
+'''
 def controllo_arg () :
     if len (sys.argv) != num_arg :       
-        '''
-        Super NB! Nel main inserirò una variabile int chiamata num_arg. prima di chiamare la funzione 
-        (Ad esempio: num_arg = int(3) se gli argomenti da passare a linea di comando sono 3 (nome del file compreso) )
-        '''
+        #Super NB! Nel main inserirò una variabile int chiamata num_arg. prima di chiamare la funzione 
+        #(Ad esempio: num_arg = int(3) se gli argomenti da passare a linea di comando sono 3 (nome del file compreso) )
         print("Inserire il nome del file (compresa l'estensione) e ... .\n")
         sys.exit()
-
+'''
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 # Se voglio creare un array copio questo nel main
