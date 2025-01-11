@@ -2,8 +2,10 @@
 python3 main.py
 '''
 import numpy as np
-from lib import additive_recurrence, MC_mod, function
+from lib import additive_recurrence, MC_mod, function, integral_Crude_MC
 import matplotlib.pyplot as plt
+
+
 def main () :
 
     # Punto 1 e 2
@@ -17,43 +19,52 @@ def main () :
         number = generatore.get_number ()
         lista_num.append (number)
 
-    print (lista_num[:10])
+    #print (lista_num[:10])
 
     # Punto 3
     int_val, int_incertezza = MC_mod (function, 0., 1., 0., 2., 1000, generatore)
     print ("\nValore dell'integrale: ", int_val, "+/-", int_incertezza, "\n")
 
     # Punto 4
-    N_toys = 1000
+    N_toys = 100
     N_points = 10
-    N_points_max = 25000
+    list_points = []
+    incerteza_list = []
 
-    seq_N = []
-    seq_sigma = []
-    seq_sigma_t = []
-    seq_mean = []
+    while (N_points < 25000) :
+        integral_list = []
+        for contatore_toys in range (N_toys) :
+            integral_val, incertezza_val = MC_mod (function, 0., 1., 0., 2., N_points, generatore)
+            integral_list.append (integral_val)
+        incerteza_list.append (np.std (integral_list))         # sono indentati allo stesso modo (infatti hanno la stessa lunghezza)
+        list_points.append (N_points)
+        N_points = N_points * 2
 
-    while N_points < N_points_max :
-        print ('running with', N_points, 'points')
-        integrals = []
-        for i_toy in range (N_toys): 
-            result = MC_mod (function, 0., 1., 0., 2., N_points, generatore)
-            integrals.append (result[0])
-            if i_toy == 0 : 
-                seq_sigma.append (result[1])  
-        seq_N.append (N_points)
-        seq_sigma_t.append (np.std (integrals))
-        seq_mean.append (np.mean (integrals))
-        N_points *= 2
-    print ('DONE')
 
     # Grafico
     fig, ax = plt.subplots ()
-    ax.plot (seq_N, seq_mean, "o-", label = "mean", color = "blue")
-    ax.plot (seq_N, seq_sigma, "o-", label = "estimate", color = "red")
-    ax.plot (seq_N, seq_sigma_t, "o-", label = "toys", color = "orange")
+    ax.plot (list_points, incerteza_list, "o-", label = "Incertezza MC_mod", color = "blue")
+
+
+    # Punto 5
+    N_toys = 100
+    N_points = 10
+    list_points = []
+    incerteza_list = []
+
+    while (N_points < 25000) :
+        integral_list = []
+        for contatore_toys in range (N_toys) :
+            integral_val, incertezza_val = integral_Crude_MC (function, 0., 1., N_points)
+            integral_list.append (integral_val)
+        incerteza_list.append (np.std (integral_list))         # sono indentati allo stesso modo (infatti hanno la stessa lunghezza)
+        list_points.append (N_points)
+        N_points = N_points * 2
+
+    ax.plot (list_points, incerteza_list, "o-", label = "Incertezza Crude MC", color = "red")
     ax.set_xscale ("log")
-    #ax.set_yscale ("log")
+    ax.set_yscale ("log")
+    ax.legend ()
     ax.grid ()
 
     plt.show ()

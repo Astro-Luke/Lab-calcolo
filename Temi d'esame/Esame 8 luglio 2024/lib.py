@@ -1,6 +1,7 @@
 import numpy as np
 import random
 from math import ceil
+from scipy.stats import rayleigh
 
 def sturges (N_eventi) :
     return int (ceil (1 + np.log2 (N_eventi))) 
@@ -25,7 +26,6 @@ def rand_TAC_gaus (mu, sigma) :
     while (y > np.exp (-0.5 * ( ((x - mu) / sigma)**2) ) ) :
         x = rand_range (x_sx, mu + 3. * sigma)
         y = rand_range (0., y_max)
-        print (x)
     return x
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -34,10 +34,10 @@ def random_walk (mean, sigma, N_passi) :
     asse_x = [0.]
     asse_y = [0.]
     for _ in range (N_passi) : 
-        theta = rand_range (0., 360.)
+        theta = rand_range (0., 2*np.pi)
         ro = rand_TAC_gaus (mean, sigma)
-        x = ro * np.cos (theta)
-        y = ro * np.sin (theta)
+        x = asse_x[-1] + ro * np.cos (theta)
+        y = asse_y[-1] + ro * np.sin (theta)
         asse_x.append (x)
         asse_y.append (y)
     return asse_x, asse_y
@@ -46,6 +46,11 @@ def random_walk (mean, sigma, N_passi) :
 
 def calcola_distanza (x_0, x_n, y_0, y_n) :
     return np.sqrt( ((x_n - x_0)**2) + ((y_n - y_0)**2) )
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+def funzione_fit (bin_edges, N) :
+    return rayleigh.cdf (bin_edges, loc = 0, scale = np.sqrt (N/2))
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 

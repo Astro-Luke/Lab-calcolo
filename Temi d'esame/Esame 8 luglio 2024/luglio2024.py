@@ -3,8 +3,10 @@ python3 luglio2024.py
 '''
 import numpy as np
 import matplotlib.pyplot as plt
+from iminuit import Minuit
+from iminuit.cost import ExtendedBinnedNLL
 from scipy.stats import rayleigh
-from lib import random_walk, calcola_distanza, media, varianza_bessel, skewness, kurtosis
+from lib import random_walk, calcola_distanza, media, varianza_bessel, skewness, kurtosis, sturges, funzione_fit, Rayleigh
 
 def main () :
 
@@ -35,33 +37,26 @@ def main () :
 
     # Punto 3
     N_persone = 10000
-    coord_x_pop = []
-    coord_y_pop = []
     list_distanze = []
     for _ in range (N_persone) :
         coord_x, coord_y = random_walk (mean, sigma, N_passi)
         distanza = calcola_distanza (0., coord_x[10], 0., coord_y[10])
         list_distanze.append (distanza)
-        coord_x_pop.append (coord_x)
-        coord_y_pop.append (coord_y)
-        
-        '''
-        print ("\n", coord_x_pop, "\n")
-        print (coord_y_pop)
-        '''
 
-    #Nbin = sturges (len (list_distanze))
 
-    #bin_edges = np.linspace (min (coord_x_pop), max (coord_x_pop), Nbin)
+    Nbin = sturges (len (list_distanze))
+
+    bin_content, bin_edges = np.histogram (list_distanze, bins=Nbin, range = (min (list_distanze), max(list_distanze)))
     #print (bin_edges)
+    '''
     fig, ax = plt.subplots (nrows = 1, ncols = 1)
-    ax.hist (list_distanze, bins = 'auto', color = 'orange')
+    ax.hist (list_distanze, bins = bin_edges, color = 'orange')
     ax.set_title ('Plot persone diversamente sobrie', size = 14)
     ax.set_xlabel ('x')
     ax.set_ylabel ('Distanza percorsa')
     ax.grid ()                                        
     plt.savefig ('Persone ubriache.png')
-
+    '''
     # Punto 4
     vett_distanza = np.array (list_distanze)    # casting
 
@@ -71,7 +66,28 @@ def main () :
     print ("\nCurtosi: ", kurtosis (list_distanze))
 
     # punto 5: Fit
+    N_passi = 10
+    funz_costo = ExtendedBinnedNLL (bin_content, bin_edges, funzione_fit)
+    my_minuit = Minuit (funz_costo, N_passi)
+    my_minuit.migrad ()
 
+    print ("Esito del Fit: ", my_minuit.valid)
+    print ("Valore: ", my_minuit.values[0], "+/-", my_minuit.errors[0])
+
+
+    fig, ax = plt.subplots (nrows = 1, ncols = 1)
+    x = np.linspace (min (bin_edges), max (bin_edges), 500)
+
+    ax.hist (list_distanze, bins = bin_edges, color = 'blue')
+    #Normalizzazione tipica delle distribuzioni binnate, prendere la distanza tra due bin edges e moltiplicarla per il numero di eventi/entrate
+    ax.plot (x, N_persone * (bin_edges[1] - bin_edges[0]) * Rayleigh (x, *my_minuit.values), label = "Rayleigh Fit", color = "red")          
+    ax.plot (x, N_persone * (bin_edges[1] - bin_edges[0]) * Rayleigh (x, N_passi), label = "True Rayleigh", color = "green")
+    ax.set_title ('Plot persone diversamente sobrie', size = 14)
+    ax.set_xlabel ('x')
+    ax.set_ylabel ('Distanza percorsa')
+    ax.legend ()
+    ax.grid ()                                        
+    plt.savefig ('Persone ubriache.png')
 
     plt.show ()
 

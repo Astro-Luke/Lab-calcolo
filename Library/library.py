@@ -165,7 +165,7 @@ Merging dizionari: merged_dict = {**my_dict, **another_dict}
 '''
 
 # Funzione di controllo degli argomenti da modificare di volta in volta nel main
-def controllo_arg() :
+def controllo_arg () :
     if len (sys.argv) != num_arg :       
         '''
         Super NB! Nel main inserirò una variabile int chiamata num_arg. prima di chiamare la funzione 
@@ -202,26 +202,29 @@ def leggi_file_dati (nome_file) :
     Return: tuple, un array NumPy con i dati e il numero di righe del file.
     '''
     with open (nome_file, 'r') as file:
-        lines = file.readlines()
+        lines = file.readlines ()
         lista_dati = []
         
         for line in lines:
             lista_string = line.split()
             list_float = [float(x) for x in lista_string]
-            lista_dati.append(list_float)
+            lista_dati.append (list_float)
         
-        sample = np.array(lista_dati)
-        N_righe = len(sample)
+        sample = np.array (lista_dati)
+        N_righe = int (len (sample))
     
     return sample, N_righe              # attenzione che ritorna due valori (array e int)!!!
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 '''
+    # Creazione file.txt
     np.savetxt ("nome_del_file.txt", vettore)     # qui il file.txt è creato in automatico
 
+    # Lettura file.txt
     vettore = np.loadtxt ("nome_del_file.txt")                    # legge il file.txt e salva tutto all'interno di un vettore numpy
     vettore = np.loadtxt ("nome_del_file.txt", unpack = True)     # unpack in questo caso è necessario perchè ho più colonne
+    vettore = np.loadtxt ("nome_del_file.txt", delimiter = " ")   # tra " " mette di default lo spazio
 '''
 
 
@@ -235,7 +238,14 @@ def sturges (N_eventi) :
 
 # Istogramma
 '''
+    Nbin = sturges (N)
+
     bin_edges = np.linspace(x_min, x_max, Nbin)         # Regola la dimensione dei bin e Nbin = numero di bin
+
+    # Oppure posso usare (se mi serve il contenuto dei bin/altezza dei bin): 
+
+    bin_content, bin_edges = np.histogram (sample, bins=Nbin, range = (min(sample), max(sample)))      
+    # bin_content: contenuto/altezza di ogni bin (è una lista), bin_edges: larghezza dei bin
     fig, ax = plt.subplots (nrows = 1, ncols = 1)
     ax.hist (sample, bins=bin_edges, color = 'orange')
     ax.set_title ('Nome istogramma', size = 14)
@@ -351,7 +361,7 @@ def fattoriale (N) :
 def coeff_binom (N, k) :
     if N == 0 & N < k :
         return 0
-    return fattoriale (N) / fattoriale (k) * fattoriale (N-1)
+    return fattoriale (N) / (fattoriale (k) * fattoriale (N-1))
     
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -552,6 +562,7 @@ def seed_range (xMin, xMax, N, seed = 0.) :
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 #Funzione che genera numeri pseudocasuali tramite l'argoritmo Try And Catch e distribuzione uniforme rand_range
+# con intervalli da passare
 def rand_TAC (f, x_min, x_max, y_max) :
     x = rand_range (x_min, x_max)
     y = rand_range (0, y_max)
@@ -562,7 +573,7 @@ def rand_TAC (f, x_min, x_max, y_max) :
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
-#Funzione che genera numeri pseudocasuali con TAC e distribuz. gaussiana
+#Funzione che genera numeri pseudocasuali con TAC e distribuz. gaussiana a partire da parametri gaussiani
 def rand_TAC_gaus (mu, sigma, N) :
     sample = []
     y_max = 1.
@@ -589,7 +600,7 @@ def rand_TAC_norm (f, x_min, x_max, y_max, loc, scale) :
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 #Funzione che genera numeri pseudocasuali con TAC e distribuz. exp
-def rand_TAC_exp (lambd, N) :       # N numero di num pseudocas da generare
+def rand_TAC_exp (lambd, N) :       # N numero di num. pseudocasuali da generare
     sample = []
     y_max = lambd
     tau = 1/lambd
