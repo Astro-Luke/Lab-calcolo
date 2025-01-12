@@ -3,8 +3,7 @@ import matplotlib.pyplot as plt
 
 from library import loglikelihood, esponenziale, rand_exp_inversa, sezioneAureaMax_LL, intersect_LLR
 
-def loglikelihood_fixed (para, pdf, sample, theta_hat) :
-    return loglikelihood (sample, pdf, para)
+
 
 def main():
 
@@ -18,7 +17,7 @@ def main():
     for _ in range (N_eventi) :
         elenco_n_pseudocasuali.append (rand_exp_inversa(tau))
 
-    for t in np.arange(0.5, 5., 0.2) :              # arange per aver step di 0.2
+    for t in np.arange (0.5, 5., 0.02) :              # arange per aver step di 0.2
         val_loglikelihood = loglikelihood (elenco_n_pseudocasuali, esponenziale, t)
         raccolta_likelihood.append (val_loglikelihood)
         lista_tau.append (t)
@@ -28,9 +27,12 @@ def main():
     # Livello di confidenza: log-likelihood massima - 0.5
     ylevel = loglikelihood(elenco_n_pseudocasuali, esponenziale, tau_max_loglike) - 0.5
 
+    lista_parameter = [tau_max_loglike]
+
     # Calcolo dei punti di intersezione
-    val_left_intercept = intersect_LLR (loglikelihood, esponenziale, elenco_n_pseudocasuali, 0.5, tau_max_loglike, ylevel, tau_max_loglike)
-    val_right_intercept = intersect_LLR (loglikelihood, esponenziale, elenco_n_pseudocasuali, tau_max_loglike, 5., ylevel, tau_max_loglike)
+    val_left_intercept = intersect_LLR (loglikelihood, esponenziale, elenco_n_pseudocasuali, 0.5, tau_max_loglike, ylevel, lista_parameter)
+    val_right_intercept = intersect_LLR (loglikelihood, esponenziale, elenco_n_pseudocasuali, tau_max_loglike, 5., ylevel, lista_parameter)
+
 
     print(f"Massimo della log-likelihood (tau): {tau_max_loglike:.2f}")
     print(f"Intervallo di confidenza a sinistra (tau - sigma): {val_left_intercept:.2f}")

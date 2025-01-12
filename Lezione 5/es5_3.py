@@ -1,8 +1,10 @@
 '''
-Creare una libreria Python che implementi la Fractionclasse, 
-contenente il suo costruttore, i membri dati per salvare numeratore e denominatore e il metodo della classe 
-che restituisce la divisione tra numeratore e denominatore.
+Aggiungere alla Fractionclasse il sovraccarico delle operazioni +, -, *, / in modo 
+che ciascuna di esse restituisca un oggetto di tipo Fraction.
+Aggiungere alla funzione di test la chiamata a tutti i nuovi metodi e 
+la verifica del loro comportamento.
 '''
+
 
 from math import gcd
 import sys

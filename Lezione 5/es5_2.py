@@ -1,7 +1,8 @@
 '''
-Creare una libreria Python che implementi la Fractionclasse, 
-contenente il suo costruttore, i membri dati per salvare numeratore e denominatore e il metodo della classe 
-che restituisce la divisione tra numeratore e denominatore.
+Implementare una funzione di test della classe all'interno del file di 
+libreria stesso, che verifichi l'output di ciascun metodo della classe 
+e che stampi sullo schermo il valore del numeratore e del denominatore di una frazione.
+a simple class to handle fractions of integer numbers
 '''
 
 from math import gcd
