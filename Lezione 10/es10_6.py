@@ -29,8 +29,8 @@ def main():
     ylevel = loglikelihood(elenco_n_pseudocasuali, esponenziale, tau_max_loglike) - 0.5
 
     # Calcolo dei punti di intersezione
-    val_left_intercept = intersect_LLR (loglikelihood_fixed, esponenziale, elenco_n_pseudocasuali, 0.5, tau_max_loglike, ylevel, tau_max_loglike)
-    val_right_intercept = intersect_LLR (loglikelihood_fixed, esponenziale, elenco_n_pseudocasuali, tau_max_loglike, 5., ylevel, tau_max_loglike)
+    val_left_intercept = intersect_LLR (loglikelihood, esponenziale, elenco_n_pseudocasuali, 0.5, tau_max_loglike, ylevel, tau_max_loglike)
+    val_right_intercept = intersect_LLR (loglikelihood, esponenziale, elenco_n_pseudocasuali, tau_max_loglike, 5., ylevel, tau_max_loglike)
 
     print(f"Massimo della log-likelihood (tau): {tau_max_loglike:.2f}")
     print(f"Intervallo di confidenza a sinistra (tau - sigma): {val_left_intercept:.2f}")

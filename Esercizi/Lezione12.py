@@ -1,3 +1,8 @@
+
+# ----- ----- ----- ----- Lezione 12 ----- ----- ----- -----
+
+
+# Esercizio 1
 '''
 Write a program that fits the events saved in the file dati.txt.
 Take care to determine the range and binning of the histogram used for the fit based on the events themselves, 
