@@ -193,7 +193,7 @@ def percentile(x,p):
 
 #versione che compare nelle correzioni dei temi, non dovrebbe cambiare nulla 
 def sturges (N_events) :
-        '''
+    '''
     algoritmo per calcolo del numero di bin ideale data la lunghezza del campione.
     Ideale per array di lunghezza non troppo piccola nè troppo grande
     per array grande (>10000) conviene cercare altri metodi, ad esempio usare la radice quadrata
@@ -409,7 +409,14 @@ def sezioneAureaMax_ricorsiva (
 
 #-------------------GENERATORI NUMERI PSEUDO-CASUALI------------------
 #myrand
+# di default dalla libreria random
+'''
+random.random()     # genera numeri pseudocasuali tra 0 ed 1
 
+random.randint(min, max)    # genera numeri pseudocasuali tra min e max
+
+random.seed(seed)       # dove seed va passato nel main o lina di comando o in input, basta chiamare questa funzione una sola volta
+'''
 
 # Genera un singolo campione da una PDF arbitraria
 def mygenera_pdf(xMin, xMax, yMax, pdf):
@@ -541,7 +548,6 @@ def generate_TAC (f, xMin, xMax, yMax, N, seed = 0.) :
     if seed != 0. : random.seed (float (seed))
     randlist = []
     for i in range (N):
-        # Return the next random floating point number in the range 0.0 <= X < 1.0
         randlist.append (rand_TAC (f, xMin, xMax, yMax))
     return randlist
 
@@ -612,8 +618,7 @@ def generate_TCL (xMin, xMax, N, N_sum = 10, seed = 0.) :
     generazione di N numeri pseudo-casuali
     con il metodo del teorema centrale del limite, in un certo intervallo,
     a partire da un determinato seed
-
-    
+ 
     Attenzione: sfrutta le funzioni rand_range e rand_TCL definite sopra. 
                 Se si vuole copiare questa funzione assicurarsi di avere anche le altre nella stessa libreria/script
     '''
@@ -768,7 +773,7 @@ def integral_HOM (func, xMin, xMax, yMax, N_evt) :
         tuple: 
             - integral (float): stima dell'integrale.
             - integral_unc (float): incertezza associata all'integrale.
-'''
+    '''
     x_coord = generate_range (xMin, xMax, N_evt)
     y_coord = generate_range (0., yMax, N_evt)
 
@@ -1361,7 +1366,13 @@ def fattoriale (N) :
     if N == 0 :
         return 1
     return fattoriale (N-1) * N
-    
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+# Gaussiana con sigma = 1 e mu = 0
+def gaussiana (x) :
+    return (1 / (np.sqrt(2 * np.pi))) * np.exp(-0.5 * (x)**2)
+
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 #Funzione coeff. binomiale
@@ -1572,6 +1583,12 @@ negli esempi c'è un programma che usa hit or miss senza la funzione della libre
 11) minimi quadrati, fit qualiti Q^2, matrice covarianza
         
 12) fit con distribuzioni binnate
+
+esercizi lezione 12:
+    1- distribuizone binnata, background esponeneziale e segnale gaussiano
+    2- fit distribuzione gaussiana, max likelihood con distr binnana e non binnata
+    3- loop dell'esercizio 2 che mostra andamento con numero differente di dati considerati (con toy experiment)
+    4- confronto funzioni di costo con likelihood, estesa, minimi quadrati
 '''
 
 
@@ -1674,6 +1691,33 @@ Qui definisco bin_edges e N_bins per conto mio, non utilizzo np.histogram dunque
     plt.tight_layout()  # Questo aggiusta automaticamente spazi tra i grafici
     plt.savefig("grafici_PDF_CDF_affiancati.png")
     plt.show()
+
+----------------TOY EXPERIMENT---------------------
+import numpy as np
+from scipy.stats import norm
+
+# Parametri del modello
+true_mu = 1.0
+true_sigma = 0.5
+sample_size = 100
+N_toys = 1000
+
+# Contenitori per i risultati
+mu_estimates = []
+sigma_estimates = []
+
+# Esegui N_toys simulazioni
+for _ in range(N_toys):
+    # 1. Genera un campione simulato
+    sample = np.random.normal(loc=true_mu, scale=true_sigma, size=sample_size)
+    
+    # 2. Stima la media e la deviazione standard
+    mu_estimates.append(np.mean(sample))
+    sigma_estimates.append(np.std(sample))
+
+# Calcola statistiche sui risultati
+print(f"Stima di mu: {np.mean(mu_estimates):.3f} ± {np.std(mu_estimates):.3f}")
+print(f"Stima di sigma: {np.mean(sigma_estimates):.3f} ± {np.std(sigma_estimates):.3f}")
 '''
 
 
@@ -1689,6 +1733,13 @@ least_squares = LeastSquares (x, y, sigma, funzione_da_fittare)        # La funz
 my_minuit = Minuit (least_squares, par0 = 0, par1 = 0)                 # La classe Minuit va ad effettuare la minimizzazione, 
                                                                        # prende in ingresso la funzione costo ed i parametri iniziali.
 è il principale algoritmo di minimizzazione utilizzato da Minuit.
+
+Se ho una distibuzione binnata, per costruire la funzione di costo, uso:
+my_cost_func = ExtendedBinnedNLL (bin_content, bin_edges, mod_total)
+
+La funzione di costo è una misura dell'errore o della discrepanza tra i dati osservati e il modello teorico.
+Nel caso dei minimi quadrati la funzione di costo è il chi quadro.
+Minimizzare la funzione di costo equivale a trovare il miglior adattamento dei dati al modello, massimizzando la probabilità che il modello spieghi i dati.
 
 Questo metodo cerca di trovare i valori ottimali dei parametri (par0 e par1) che minimizzano la funzione di costo (X^2).
 Durante l'esecuzione, migrad calcola: 
@@ -1734,9 +1785,16 @@ print (my_minuit.valid)
 display (my_minuit)
 '''
 
-#la lascio commentata perchè mai testata
+#la lascio commentate perchè mai testate ma promettono bene
 '''
-def esegui_fit (x, y, sigma, dizionario_par, funzione_fit) :
+# Funzione che esegue il fit con metodo dei minimi quadrati
+def esegui_fit (
+        x,                  # vettore x (np.array)
+        y,                  # vettore y (np.array)
+        sigma,              # vettore dei sigma (np.array)
+        dizionario_par,     # dizionario con parametri 
+        funzione_fit        # funzione del modello da fittare
+    ) :
 
     if not (isinstance(dizionario_par, dict)) :
         print ("Inserisci un dizionario come quarto parametro.\n")
@@ -1755,6 +1813,40 @@ def esegui_fit (x, y, sigma, dizionario_par, funzione_fit) :
     diz_risultati = {
         "Validità": is_valid, 
         "Qsquared": Q_squared,
+        "Ndof": N_dof,
+        "Param": my_minuit.parameters,
+        "Value": my_minuit.values,
+        "Errori": my_minuit.errors,
+        "MatriceCovarianza": matrice_cov
+    }
+
+    return diz_risultati
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+# Funzione per il fit con loglikelihood
+def esegui_fit_LL (
+        bin_content,        # contenuto dei bin
+        bin_edges,          # larghezza dei bin
+        dizionario_par,     # dizionario con parametri da determinare
+        funzione_fit        # funzione modello da fittare
+    ) :
+
+    if not (isinstance (dizionario_par, dict)) :
+        print ("Inserisci: bin_content, bin_edges, dizionario parametri e funzione da fittare.\n")
+        sys.exit()
+
+    funzione_costo = ExtendedBinnedNLL (bin_content, bin_edges, funzione_fit)
+    my_minuit = Minuit (funzione_costo, **dizionario_par)
+    my_minuit.migrad ()                                 
+    my_minuit.hesse ()                                  
+
+    is_valid = my_minuit.valid
+    N_dof = my_minuit.ndof
+    matrice_cov = my_minuit.covariance
+
+    diz_risultati = {
+        "Validità": is_valid,
         "Ndof": N_dof,
         "Param": my_minuit.parameters,
         "Value": my_minuit.values,
@@ -1937,6 +2029,34 @@ sys.argv: lista che contiene tutte le parole scritte dopo python3
     esempio: python3 myscript1.py 13 
             sys.argv[0]      #restituisce myscript1.py
             sys.argv[1]      #restituisce 13
+'''
+
+#----------------LOGARITMI NELLE VARIE LIBRERIE-------------
+'''
+math:
+    math.log(x, base):
+        Permette di specificare una base arbitraria:
+        Se fornisci la base, calcola il logaritmo in quella base.
+        Se non specifichi la base, il default è il logaritmo naturale in base e
+    math.log10(x):
+        Calcola il logaritmo in base 10.
+    math.log2(x):
+        Calcola il logaritmo in base 2.
+        
+numpy: 
+    np.log(x):
+        di default calcola il logartimo naturale base e 
+        Non permette di specificare direttamente una base diversa.
+    np.log10(x):
+        Calcola il logaritmo in base 10.
+    np.log2(x):
+        Calcola il logaritmo in base 2.
+    
+    per usare base arbitraria in numpysi deve sfruttare la formula del cambio di base, si può fare così:
+        def log_base(x, base):
+            return np.log(x) / np.log(base)
+
+    se devi farlo a sto punto usa math che è già fatta
 '''
 
 
