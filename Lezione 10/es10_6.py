@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 
 from library import loglikelihood, esponenziale, rand_exp_inversa, sezioneAureaMax_LL, intersect_LLR
 
-
-
 def main():
 
     tau = 2.4

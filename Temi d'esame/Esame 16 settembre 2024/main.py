@@ -66,7 +66,8 @@ def main () :
     ax.set_yscale ("log")
     ax.legend ()
     ax.grid ()
-
+    
+    plt.savefig ("26settembre2024.png")
     plt.show ()
     
 if __name__ == "__main__" :

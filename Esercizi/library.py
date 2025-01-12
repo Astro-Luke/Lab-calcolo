@@ -912,20 +912,23 @@ def intersect_LLR (
     xMin,           # minimo dell'intervallo          
     xMax,           # massimo dell'intervallo 
     ylevel,         # value of the horizontal intersection    
-    theta_hat,      # maximum of the likelihood    
+    parameters,      # lista dei parametri 
     precision = 0.0001): # precisione della funzione        
     '''
     Funzione che calcola zeri
     con il metodo della bisezione
     '''
     def gprime (x) :
-        return g (x, pdf, sample, theta_hat) - ylevel
+        parameters[0] = x
+        return g (sample, pdf, parameters) - ylevel
 
     xAve = xMin 
     while ((xMax - xMin) > precision) :
         xAve = 0.5 * (xMax + xMin) 
-        if (gprime (xAve) * gprime (xMin) > 0.) : xMin = xAve 
-        else                                    : xMax = xAve 
+        if (gprime (xAve) * gprime (xMin) > 0.) : 
+            xMin = xAve 
+        else : 
+            xMax = xAve 
     return xAve 
 
 # ----------------- SEZIONE FIT -----------------
