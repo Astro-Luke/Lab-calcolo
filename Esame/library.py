@@ -8,13 +8,6 @@ from iminuit import Minuit
 from iminuit.cost import LeastSquares, ExtendedBinnedNLL
 
 
-# ----------------- MATH -----------------
-
-'''
-ceil ()      # arrotonda in eccesso
-floor ()     # arrotonda in difetto 
-'''
-
 # ----------------- TIME -----------------
 
 '''
@@ -642,7 +635,7 @@ def rand_TCL (xMin, xMax, N = 1000) :
 # Funzione che genera numeri pseudocasuali partendo dal teorema centrale del limite usando media, sigma di una gaussiana
 # ed N numero di eventi pseudocasuali
 def rand_TCL_par_gauss (mean, sigma, N) :           # par_gauss = parametri gaussiani
-    y = 0.
+    y = 0. ; 
     xMin = mean - np.sqrt(3 * N) * sigma
     xMax = mean + np.sqrt(3 * N) * sigma
     for i in range (N) :
@@ -1021,16 +1014,6 @@ def esegui_fit (
     }
 
     return diz_risultati
-'''
-# Stampa dei valori
-    print ("\nEsito del Fit: ", diz_result["Validità"])
-    print ("\nValore del Q-quadro: ", diz_result["Qsquared"])
-    print ("\nNumero di gradi di libertà: ", diz_result["Ndof"], "\n")
-    print("Matrice di covarianza:\n", diz_result["MatriceCovarianza"])
-
-    for param, value, errore in zip (diz_result["Param"], diz_result["Value"], diz_result["Errori"]) : 
-        print (f'{param} = {value:.6f} +/- {errore:.6f}\n')
-'''
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -1159,7 +1142,7 @@ def dev_std_media (lista) :
 
 
 # Skewness con lista
-def skewness (lista):
+def skewness(lista):
     mean = media(lista)  # Calcola la media
     sigma = dev_std(lista)  # Calcola la deviazione standard
     n = len(lista)
@@ -1171,7 +1154,7 @@ def skewness (lista):
 
 
 # Curtosi con lista
-def kurtosis (lista):
+def kurtosis(lista):
     mean = media(lista)  # Calcola la media
     variance = varianza(lista)  # Calcola la varianza
     n = len(lista)
