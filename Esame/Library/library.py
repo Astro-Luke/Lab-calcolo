@@ -269,7 +269,7 @@ def sturges (N_eventi) :
 
 # Disegno di un plot
 '''
-    x_axis = np.linspace(x_min, x_max, 100)
+    x_axis = np.linspace (x_min, x_max, 100)
     
     fig, axes = plt.subplots(nrows = 1, ncols = 1, figsize = (10, 5))   # 1 riga, 1 colonna
     axes.plot(x_axis, funzione_da_inserire (x_axis), label="PDF")       # con esponenziale.pdf uso la funzione predefinita nella libreria scipy

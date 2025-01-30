@@ -1,4 +1,5 @@
 # Librerie necessarie affinchè la library.py funzioni (non tutte sono state usate)
+# math può essere rimpiazzata da numpy
 import sys
 from math import sqrt, ceil, factorial, pow
 import numpy as np
@@ -6,7 +7,7 @@ import time
 import random
 from iminuit import Minuit
 from iminuit.cost import LeastSquares, ExtendedBinnedNLL
-
+from scipy.stats import chi2
 
 # ----------------- MATH -----------------
 
@@ -239,7 +240,7 @@ def leggi_file_dati (nome_file) :
 
 # Funzione sturges per il binnaggio (funziona discretamente bene, ma conviene sempre veerificare)
 def sturges (N_eventi) :
-    return int (ceil (1 + np.log2 (N_eventi)))      # ceil appartiene alla libreria math, si può usare anche np.ceil (appartiene a numpy)
+    return int (np.ceil (1 + np.log2 (N_eventi)))      # ceil appartiene alla libreria math, si può usare anche np.ceil (appartiene a numpy)
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -249,7 +250,7 @@ def sturges (N_eventi) :
 
     bin_edges = np.linspace(x_min, x_max, Nbin)         # Regola la dimensione dei bin e Nbin = numero di bin
 
-    # Oppure posso usare (se mi serve il contenuto dei bin/altezza dei bin): 
+    # Oppure posso usare (se mi serve il contenuto dei bin/larghezza dei bin): 
 
     bin_content, bin_edges = np.histogram (sample, bins=Nbin, range = (min(sample), max(sample)))      
     # bin_content: contenuto/altezza di ogni bin (è una lista), bin_edges: larghezza dei bin
@@ -1010,6 +1011,8 @@ def esegui_fit (
     N_dof = my_minuit.ndof
     matrice_cov = my_minuit.covariance
 
+    p_value = chi2.sf(Q_squared, N_dof)    # qui serve: from scipy.stats import chi2
+    
     diz_risultati = {
         "Validità": is_valid, 
         "Qsquared": Q_squared,
@@ -1017,7 +1020,8 @@ def esegui_fit (
         "Param": my_minuit.parameters,
         "Value": my_minuit.values,
         "Errori": my_minuit.errors,
-        "MatriceCovarianza": matrice_cov
+        "MatriceCovarianza": matrice_cov,
+        "Pvalue": p_value
     }
 
     return diz_risultati
@@ -1055,17 +1059,30 @@ def esegui_fit_LL (
     N_dof = my_minuit.ndof
     matrice_cov = my_minuit.covariance
 
+    p_value = chi2.sf(Q_squared, N_dof)    # qui serve: from scipy.stats import chi2
+    
     diz_risultati = {
         "Validità": is_valid,
         "Ndof": N_dof,
         "Param": my_minuit.parameters,
         "Value": my_minuit.values,
         "Errori": my_minuit.errors,
-        "MatriceCovarianza": matrice_cov
+        "MatriceCovarianza": matrice_cov,
+        "Pvalue": p_value
     }
 
     return diz_risultati
 
+'''
+# Stampa dei valori
+    print ("\nEsito del Fit: ", diz_result["Validità"])
+    print ("\nValore del Q-quadro: ", diz_result["Qsquared"])
+    print ("\nNumero di gradi di libertà: ", diz_result["Ndof"], "\n")
+    print("Matrice di covarianza:\n", diz_result["MatriceCovarianza"])
+
+    for param, value, errore in zip (diz_result["Param"], diz_result["Value"], diz_result["Errori"]) : 
+        print (f'{param} = {value:.6f} +/- {errore:.6f}\n')
+'''
 
 '''
 # ------------------- STATISTICHE -------------------
@@ -1127,6 +1144,16 @@ def kurtosis (sample) :
     kurt = np.sum((sample - mean)**4) / (n * variance**2) - 3
     return kurt
 
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+def mediana (sample) :
+    array_ordinato = sorted (sample)
+    N = len (array_ordinato)
+    if (N % 2 == 0) :
+        mediana = ( array_ordinato[int(N/2)] + array_ordinato[int(N/2) - 1] ) / 2
+    else : 
+        mediana = array_ordinato[int (np.floor (N/2))]
+    return mediana
 
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
@@ -1140,7 +1167,7 @@ def media (lista) :
 
     
 # Varianza con lista
-def varianza_bessel (lista) :
+def varianza (lista) :
     somma_quadrata = 0
     for elem in lista :
         somma_quadrata = somma_quadrata + (elem - media(lista))**2
@@ -1149,13 +1176,13 @@ def varianza_bessel (lista) :
     
 # Deviaz. standard con lista
 def dev_std (lista) :
-    sigma = sqrt(varianza(lista))
+    sigma = np.sqrt(varianza(lista))
     return sigma
 
     
 # Deviaz. standard della media con lista
 def dev_std_media (lista) :
-    return dev_std(lista)/sqrt(len(lista))
+    return dev_std(lista)/np.sqrt(len(lista))
 
 
 # Skewness con lista
